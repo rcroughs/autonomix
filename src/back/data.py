@@ -44,19 +44,14 @@ class Todo:
 
 
 class Shopping:
-    id: int
     user_id: int
     category_id: int
     amount: int
 
-    def __init__(self, id: int, user_id: int, category_id: int, amount: int):
-        self.id = id
+    def __init__(self, user_id: int, category_id: int, amount: int):
         self.user_id = user_id
         self.category_id = category_id
         self.amount = amount
-
-    def get_id(self) -> int:
-        return self.id
 
     def get_user_id(self) -> int:
         return self.user_id
