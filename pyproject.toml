@@ -1,0 +1,16 @@
+[project]
+name = "autonomix"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+license = { file = "LICENSE.txt" }
+authors = [
+  { name = "Romain Croughs" },
+  { name = "Lucas van Praag" },
+  { name = "Oleksandra Omelyanyuk" },
+  { name = "Kamila Mortel" },
+]
+dependencies = []
+
+[project.urls]
+"Homepage" = "https://github.com/rcroughs/autonomix"
