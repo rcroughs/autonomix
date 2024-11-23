@@ -7,6 +7,7 @@ from db import Database
 from data import *
 from typing import Optional
 import os
+import json
 
 
 def create_app(testing=False):
@@ -133,14 +134,10 @@ def get_recipes():
 
     # Formatage
     recipes_list = [
-        {
-            "id": recipe.id,
-            "name": recipe.name,
-            "difficulty": recipe.difficulty,
-            "image_url": recipe.image_url,
-        }
+        {"id": recipe.id, "name": recipe.name, "json":json.loads(recipe.json), "difficulty": recipe.difficulty, "image_url": recipe.image_url}
         for recipe in recipes
     ]
+    
     return jsonify(recipes_list), 200
 
 
@@ -158,12 +155,25 @@ def post_recipe():
         id=None,
         name=data["name"],
         difficulty=data["difficulty"],
-        json=data["json"],
-        image_url=data["image_url"],
+        json=json.dumps(data["json"]),
+        image_url=data["image_url"]
     )
-    recipe_id = NotImplemented  # db.add_recipe(new_recipe)
+    db.add_recipe(new_recipe)
 
-    return jsonify({"message": "Recipe added successfully", "id": recipe_id}), 201
+    recipe_id = db.get_last_inserted_recipe().id
+
+    for i in range(1, len(data["json"])+1):
+        times, ingredient = -1, -1
+        if "-" in data["json"][f"{i}"]:
+            times, ingredient = data["json"][f"{i}"].split('-')
+        if times != -1 and ingredient != -1:
+            resp = db.get_ingredient_by_name(ingredient)
+            if resp:
+                new_link = RecipeIngredient(recipe_id, resp.get_id(), times)
+                db.add_recipe_ingredient(new_link)
+    
+    db.commit()
+    return jsonify({"message": "Recipe added successfully"}), 201
 
 
 # -------------Todo_-------------

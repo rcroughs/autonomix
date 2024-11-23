@@ -67,6 +67,11 @@ class Database:
         result = self.cursor.fetchone()
         return data.Ingredient(result[0], result[1], result[2])
 
+    def get_ingredient_by_name(self, name: str) -> data.Ingredient:
+        self.cursor.execute("SELECT * FROM ingredients WHERE name = ?", (name,))
+        result = self.cursor.fetchone()
+        return data.Ingredient(result[0], result[1], result[2])
+
     def get_recipes(self) -> list[data.Recipe]:
         self.cursor.execute("SELECT * FROM recipes")
         result = self.cursor.fetchall()
@@ -76,6 +81,14 @@ class Database:
         self.cursor.execute("SELECT * FROM recipes WHERE id = ?", (recipe_id,))
         result = self.cursor.fetchone()
         return data.Recipe(result[0], result[1], result[2], result[3], result[4])
+
+    def get_last_inserted_recipe(self) -> data.Recipe:
+        # Requête SQL pour obtenir la dernière recette insérée
+        self.cursor.execute("SELECT * FROM recipes ORDER BY id DESC LIMIT 1")
+        result = self.cursor.fetchone()
+
+        if result:
+            return data.Recipe(result[0], result[1], result[2], result[3], result[4])
 
     def get_recipe_ingredients(self, recipe_id: int) -> list[data.RecipeIngredient]:
         self.cursor.execute(

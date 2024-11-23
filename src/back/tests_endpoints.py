@@ -67,7 +67,7 @@ with app.test_client() as client:
     """
     Add Ingredients : success
     """
-    new_ingredients = [("egg", 1), ("flour", 2), ("sugar", 3)]
+    new_ingredients = [("egg", 1), ("flour", 2), ("sugar", 3), ("butter", 4)]
     for ingredient in new_ingredients:
         ing = {
             "name": ingredient[0],
@@ -87,6 +87,39 @@ with app.test_client() as client:
     """
     Create Recipe : success
     """
+    steps = {
+        "1": "2-egg",
+        "2": "+",
+        "3": "1-butter",
+        "4": ">",
+        "5": "pan"
+    }
+    recipe = {
+        "name": "fried egg",
+        "difficulty": "1",
+        "json": steps,
+        "image_url": "dummy"
+    }
+    response = client.post(url + "/recipes", json=recipe)
+    if response.status_code == 201:
+        print(f"Recipe added successfully, code {response.status_code}")
+
+    """
+    Get Recipe : success
+    """
+    response = client.get(url + "/recipes").get_json()
+
+    for recipe in response:
+        print(f"Name of the added recipe : {recipe["name"]}")
+
+    """
+    Fin des tests pas le temps de faire plus
+    """
+
+
+
+
+
 
 
 
