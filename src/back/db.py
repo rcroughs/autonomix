@@ -73,10 +73,10 @@ class Database:
 
     def get_recipe_ingredients(self, recipe_id: int) -> list[data.RecipeIngredient]:
         self.cursor.execute(
-            "SELECT * FROM recipe_ingredients WHERE recipe_id = ?", (recipe_id,)
+            "SELECT * FROM recipes_ingredients WHERE recipe_id = ?", (recipe_id,)
         )
         result = self.cursor.fetchall()
-        return [data.RecipeIngredient(row[0], row[1]) for row in result]
+        return [data.RecipeIngredient(row[0], row[1], row[2]) for row in result]
 
     def add_category(self, category: data.Category) -> None:
         self.cursor.execute(
@@ -98,7 +98,7 @@ class Database:
 
     def add_shopping_list(self, shopping: data.Shopping) -> None:
         self.cursor.execute(
-            "INSERT INTO shopping (user_id, category_id, amount) VALUES (?, ?, ?)",
+            "INSERT INTO shopping (user_id, ingredient_id, amount) VALUES (?, ?, ?)",
             (shopping.user_id, shopping.category_id, shopping.amount),
         )
 
@@ -117,6 +117,27 @@ class Database:
         self.cursor.execute(
             "INSERT INTO ingredients (name, icon_id) VALUES (?, ?)",
             (ingredient.name, ingredient.icon_id),
+        )
+
+    def add_recipe_ingredient(self, recipe_ingredient: data.RecipeIngredient) -> None:
+        self.cursor.execute(
+            "INSERT INTO recipes_ingredients (recipe_id, ingredient_id, amount) VALUES (?, ?, ?)",
+            (
+                recipe_ingredient.recipe_id,
+                recipe_ingredient.ingredient_id,
+                recipe_ingredient.amount,
+            ),
+        )
+
+    def add_contact(self, contact: data.Contact) -> None:
+        self.cursor.execute(
+            "INSERT INTO contacts (user_id, name, phone_number, image_url) VALUES (?, ?, ?, ?)",
+            (
+                contact.user_id,
+                contact.name,
+                contact.phone_number,
+                contact.image_url,
+            ),
         )
 
     def remove_todo_list(self, todo_id: int) -> None:

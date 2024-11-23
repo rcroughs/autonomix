@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS Ingredients (
 CREATE TABLE IF NOT EXISTS Recipes_Ingredients (
   recipe_id INTEGER NOT NULL,
   ingredient_id INTEGER NOT NULL,
+  amount INTEGER NOT NULL,
   PRIMARY KEY (recipe_id, ingredient_id),
   FOREIGN KEY (recipe_id) REFERENCES Recipes (id),
   FOREIGN KEY (ingredient_id) REFERENCES Ingredients (id)
@@ -46,7 +47,6 @@ CREATE TABLE IF NOT EXISTS Todo (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL,
   category_id INTEGER NOT NULL,
-  description TEXT NOT NULL,
   FOREIGN KEY (user_id) REFERENCES Users (id),
   FOREIGN KEY (category_id) REFERENCES Categories (id)
 );

@@ -69,16 +69,21 @@ class Shopping:
 class RecipeIngredient:
     recipe_id: int
     ingredient_id: int
+    amount: int
 
-    def __init__(self, recipe_id: int, ingredient_id: int):
+    def __init__(self, recipe_id: int, ingredient_id: int, amount: int):
         self.recipe_id = recipe_id
         self.ingredient_id = ingredient_id
+        self.amount = amount
 
     def get_recipe_id(self) -> int:
         return self.recipe_id
 
     def get_ingredient_id(self) -> int:
         return self.ingredient_id
+
+    def get_amount(self) -> int:
+        return self.amount
 
 
 class Recipe:
@@ -154,14 +159,19 @@ class Category:
 
 
 class Contact:
-    id: int
+    id: Optional[int]
     user_id: int
     name: str
     phone_number: str
     image_url: str
 
     def __init__(
-        self, id: int, user_id: int, name: str, phone_number: str, image_url: str
+        self,
+        id: Optional[int],
+        user_id: int,
+        name: str,
+        phone_number: str,
+        image_url: str,
     ):
         self.id = id
         self.user_id = user_id
@@ -169,7 +179,7 @@ class Contact:
         self.phone_number = phone_number
         self.image_url = image_url
 
-    def get_id(self) -> int:
+    def get_id(self) -> Optional[int]:
         return self.id
 
     def get_user_id(self) -> int:
