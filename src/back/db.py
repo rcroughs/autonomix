@@ -102,3 +102,13 @@ class Database:
 
     def remove_shopping_list(self, shopping_id: int) -> None:
         self.cursor.execute("DELETE FROM shopping WHERE id = ?", (shopping_id,))
+
+    def user_exists(self, email: str) -> bool:
+        self.cursor.execute("SELECT * FROM users WHERE mail = ?", (email,))
+        return self.cursor.fetchone() is not None
+
+    def valid_password(self, email: str, password: str) -> bool:
+        self.cursor.execute(
+            "SELECT * FROM users WHERE mail = ? AND password = ?", (email, password)
+        )
+        return self.cursor.fetchone() is not None
