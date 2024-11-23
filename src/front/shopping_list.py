@@ -1,45 +1,47 @@
-import gi 
+import gi
 import subprocess
+
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf
 
-class ShoppingMenu(Gtk.Window):
+
+class ShoppingMenu(Gtk.Box):
     def __init__(self):
-        super().__init__(title="Shopping List")
-        self.maximize()
+        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=10)
 
         # LISTE DE COURSES
-        self.items = ["front/img/shopping_icons/184532.png",
-            "front/img/shopping_icons/395211.png",
-            "front/img/shopping_icons/766020.png",
-            "front/img/shopping_icons/837560.png",
-            "front/img/shopping_icons/883514.png",
-            "front/img/shopping_icons/1206237.png",
-            "front/img/shopping_icons/2079330.png",
-            "front/img/shopping_icons/2909779.png",
-            "front/img/shopping_icons/2909894.png",
-            "front/img/shopping_icons/3093581.png",
-            "front/img/shopping_icons/4853298.png",
-            "front/img/shopping_icons/7401602.png",
-            "front/img/shopping_icons/banane.png",
-            "front/img/shopping_icons/bouteille-de-lait.png",
-            "front/img/shopping_icons/cafe.png",
-            "front/img/shopping_icons/farine.png",
-            "front/img/shopping_icons/leau.png",
-            "front/img/shopping_icons/lemon_6866595.png",
-            "front/img/shopping_icons/orange.png",
-            "front/img/shopping_icons/pain.png",
-            "front/img/shopping_icons/peach_680930.png",
-            "front/img/shopping_icons/pomme.png",
-            "front/img/shopping_icons/potato_1652127.png",
-            "front/img/shopping_icons/sucre.png"]
-        
+        self.items = [
+            "img/shopping_icons/184532.png",
+            "img/shopping_icons/395211.png",
+            "img/shopping_icons/766020.png",
+            "img/shopping_icons/837560.png",
+            "img/shopping_icons/883514.png",
+            "img/shopping_icons/1206237.png",
+            "img/shopping_icons/2079330.png",
+            "img/shopping_icons/2909779.png",
+            "img/shopping_icons/2909894.png",
+            "img/shopping_icons/3093581.png",
+            "img/shopping_icons/4853298.png",
+            "img/shopping_icons/7401602.png",
+            "img/shopping_icons/banane.png",
+            "img/shopping_icons/bouteille-de-lait.png",
+            "img/shopping_icons/cafe.png",
+            "img/shopping_icons/farine.png",
+            "img/shopping_icons/leau.png",
+            "img/shopping_icons/lemon_6866595.png",
+            "img/shopping_icons/orange.png",
+            "img/shopping_icons/pain.png",
+            "img/shopping_icons/peach_680930.png",
+            "img/shopping_icons/pomme.png",
+            "img/shopping_icons/potato_1652127.png",
+            "img/shopping_icons/sucre.png",
+        ]
+
         self.shopping_list = {}
 
         self.grid = Gtk.Grid()
         self.grid.set_row_spacing(20)
         self.grid.set_column_spacing(30)
-
 
         # Vertical layout
         vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
@@ -59,8 +61,10 @@ class ShoppingMenu(Gtk.Window):
         # Erase Everything button
         erase_button = Gtk.Button()
         pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
-            "front/img/shopping_icons/trash.png", 
-            width=50, height=50, preserve_aspect_ratio=True
+            "img/shopping_icons/trash.png",
+            width=50,
+            height=50,
+            preserve_aspect_ratio=True,
         )
         erase_image = Gtk.Image.new_from_pixbuf(pixbuf)
         erase_button.set_image(erase_image)
@@ -92,9 +96,8 @@ class ShoppingMenu(Gtk.Window):
         Gtk.StyleContext.add_provider_for_screen(
             Gdk.Screen.get_default(),
             css_provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
         )
-
 
         # Populate initial grid
         self.update_grid()
@@ -114,7 +117,9 @@ class ShoppingMenu(Gtk.Window):
             item_container.set_margin_start(30)  # Add left margin
 
             # Load the image
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(image_path, width=100, height=100, preserve_aspect_ratio=True)
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
+                image_path, width=100, height=100, preserve_aspect_ratio=True
+            )
             image = Gtk.Image.new_from_pixbuf(pixbuf)
 
             plus_button = Gtk.Button(label="+")
@@ -137,7 +142,7 @@ class ShoppingMenu(Gtk.Window):
     def add_to_shopping_list(self, button, path):
         if path not in self.shopping_list:
             self.shopping_list[path] = 0
-        self.shopping_list[path] +=1
+        self.shopping_list[path] += 1
         self.update_shopping_list()
 
     def remove_from_shopping_list(self, button, path):
@@ -156,7 +161,9 @@ class ShoppingMenu(Gtk.Window):
             item_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
 
             # Load the image
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(image_path, width=100, height=100, preserve_aspect_ratio=True)
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
+                image_path, width=100, height=100, preserve_aspect_ratio=True
+            )
             image = Gtk.Image.new_from_pixbuf(pixbuf)
 
             # Create a label to show the quantity
@@ -172,16 +179,8 @@ class ShoppingMenu(Gtk.Window):
 
             # Add the item box to the shopping list box
             self.shopping_list_box.add(item_box)
+            self.shopping_list_box.show_all()
 
-        # Show all updates
-        self.shopping_list_box.show_all()
-    
     def erase_everything(self, button):
         self.shopping_list.clear()
         self.update_shopping_list()
-
-
-shoppingWindow = ShoppingMenu()
-shoppingWindow.connect("destroy", Gtk.main_quit)
-shoppingWindow.show_all()
-Gtk.main()

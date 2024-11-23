@@ -3,6 +3,7 @@ import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GdkPixbuf
 from telephone import PhoneWindow
+from shopping_list import ShoppingMenu
 
 
 class MyApp(Gtk.Application):
@@ -75,6 +76,9 @@ class MyApp(Gtk.Application):
         # screen.pack_start(label, False, False, 0)
         # screen.pack_start(return_button, False, False, 0)
         stack.add_named(screen, "screen4")  # Ensure screen name is consistent
+
+        shopping = ShoppingMenu()
+        stack.add_named(shopping, "screen3")
 
         window.add(stack)
 
