@@ -12,55 +12,93 @@ class Database:
         self.connection.commit()
 
     def get_user(self, user_id: int) -> data.User:
-        return NotImplemented
+        self.cursor.execute("SELECT * FROM users WHERE id = ?", (user_id,))
+        result = self.cursor.fetchone()
+        return data.User(result[0], result[1], result[2], result[3])
 
     def get_users(self) -> list[data.User]:
-        return NotImplemented
+        self.cursor.execute("SELECT * FROM users")
+        result = self.cursor.fetchall()
+        return [data.User(row[0], row[1], row[2], row[3]) for row in result]
 
     def get_todo_list(self, user_id: int) -> list[data.Todo]:
-        return NotImplemented
+        self.cursor.execute("SELECT * FROM todo WHERE user_id = ?", (user_id,))
+        result = self.cursor.fetchall()
+        return [data.Todo(row[0], row[1], row[2]) for row in result]
 
     def get_shopping_list(self, user_id: int) -> list[data.Shopping]:
-        return NotImplemented
+        self.cursor.execute("SELECT * FROM shopping WHERE user_id = ?", (user_id,))
+        result = self.cursor.fetchall()
+        return [data.Shopping(row[0], row[1], row[2]) for row in result]
 
     def get_contacts(self, user_id: int) -> list[data.Contact]:
-        return NotImplemented
+        self.cursor.execute("SELECT * FROM contacts WHERE user_id = ?", (user_id,))
+        result = self.cursor.fetchall()
+        return [data.Contact(row[0], row[1], row[2], row[3], row[4]) for row in result]
 
     def get_categories(self) -> list[data.Category]:
-        return NotImplemented
+        self.cursor.execute("SELECT * FROM categories")
+        result = self.cursor.fetchall()
+        return [data.Category(row[0], row[1], row[2]) for row in result]
 
     def get_category(self, category_id: int) -> data.Category:
-        return NotImplemented
+        self.cursor.execute("SELECT * FROM categories WHERE id = ?", (category_id,))
+        result = self.cursor.fetchone()
+        return data.Category(result[0], result[1], result[2])
 
     def get_ingredients(self) -> list[data.Ingredient]:
-        return NotImplemented
+        self.cursor.execute("SELECT * FROM ingredients")
+        result = self.cursor.fetchall()
+        return [data.Ingredient(row[0], row[1], row[2]) for row in result]
 
     def get_ingredient(self, ingredient_id: int) -> data.Ingredient:
-        return NotImplemented
+        self.cursor.execute("SELECT * FROM ingredients WHERE id = ?", (ingredient_id,))
+        result = self.cursor.fetchone()
+        return data.Ingredient(result[0], result[1], result[2])
 
     def get_recipes(self) -> list[data.Recipe]:
-        return NotImplemented
+        self.cursor.execute("SELECT * FROM recipes")
+        result = self.cursor.fetchall()
+        return [data.Recipe(row[0], row[1], row[2], row[3], row[4]) for row in result]
 
     def get_recipe(self, recipe_id: int) -> data.Recipe:
-        return NotImplemented
+        self.cursor.execute("SELECT * FROM recipes WHERE id = ?", (recipe_id,))
+        result = self.cursor.fetchone()
+        return data.Recipe(result[0], result[1], result[2], result[3], result[4])
 
     def get_recipe_ingredients(self, recipe_id: int) -> list[data.RecipeIngredient]:
-        return NotImplemented
+        self.cursor.execute(
+            "SELECT * FROM recipe_ingredients WHERE recipe_id = ?", (recipe_id,)
+        )
+        result = self.cursor.fetchall()
+        return [data.RecipeIngredient(row[0], row[1]) for row in result]
 
     def add_category(self, category: data.Category) -> None:
-        return NotImplemented
+        self.cursor.execute(
+            "INSERT INTO categories (id, name, icon_id) VALUES (?, ?, ?)",
+            (category.id, category.name, category.icon_id),
+        )
 
     def add_user(self, user: data.User) -> None:
-        return NotImplemented
+        self.cursor.execute(
+            "INSERT INTO users (id, name, email, password) VALUES (?, ?, ?, ?)",
+            (user.id, user.name, user.mail, user.password),
+        )
 
     def add_todo_list(self, todo: data.Todo) -> None:
-        return NotImplemented
+        self.cursor.execute(
+            "INSERT INTO todo (id, user_id, category_id) VALUES (?, ?, ?)",
+            (todo.id, todo.user_id, todo.category_id),
+        )
 
     def add_shopping_list(self, shopping: data.Shopping) -> None:
-        return NotImplemented
+        self.cursor.execute(
+            "INSERT INTO shopping (user_id, category_id, amount) VALUES (?, ?, ?)",
+            (shopping.user_id, shopping.category_id, shopping.amount),
+        )
 
     def remove_todo_list(self, todo_id: int) -> None:
-        return NotImplemented
+        self.cursor.execute("DELETE FROM todo WHERE id = ?", (todo_id,))
 
     def remove_shopping_list(self, shopping_id: int) -> None:
-        return NotImplemented
+        self.cursor.execute("DELETE FROM shopping WHERE id = ?", (shopping_id,))
