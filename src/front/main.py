@@ -1,4 +1,6 @@
 from typing import Optional
+from screeninfo import get_monitors
+import sys
 import gi
 
 gi.require_version("Gtk", "3.0")
@@ -69,6 +71,7 @@ class MyApp(Gtk.Application):
         self.pixbuf3 = GdkPixbuf.Pixbuf.new_from_file("img/main_menu/courses.png")
         self.pixbuf4 = GdkPixbuf.Pixbuf.new_from_file("img/main_menu/tel.png")
         self.previous_window_size = None  # Track the previous window size
+        self.token = token
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(b"""
             .return-button {
@@ -90,8 +93,13 @@ class MyApp(Gtk.Application):
     def do_activate(self):
         window = Gtk.ApplicationWindow(application=self)
         window.set_title("Autonomix")
-        window.set_default_size(800, 600)
-        window.maximize()
+        if len(sys.argv) < 2:
+            input = 0
+        else:
+            input = int(sys.argv[1])
+        monitor = get_monitors()[input]
+        window.fullscreen()
+        window.set_default_size(monitor.width, monitor.height)
 
         stack = Gtk.Stack()
         stack.set_transition_type(Gtk.StackTransitionType.SLIDE_LEFT_RIGHT)
@@ -108,8 +116,8 @@ class MyApp(Gtk.Application):
         self.button3 = Gtk.Button()
         self.button4 = Gtk.Button()
 
-        wscale = window.get_size()[0] / 2
-        hscale = window.get_size()[1] / 2
+        wscale = monitor.width / 2 - 300
+        hscale = monitor.height / 2 - 150
         self.update_images(wscale, hscale)
 
         image1 = Gtk.Image.new_from_pixbuf(self.pixbuf1)
@@ -147,7 +155,7 @@ class MyApp(Gtk.Application):
 
         # Sub-screens
         screen_phone = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        phone = PhoneWindow()
+        phone = PhoneWindow(token)
         return_button = Gtk.Button(label="←")
         return_button.get_style_context().add_class("return-button")
         return_button.set_halign(Gtk.Align.START)

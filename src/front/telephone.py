@@ -1,35 +1,24 @@
 import gi
+import api
 import subprocess
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf
 
+tokeng = None
+
 
 class PhoneWindow(Gtk.Box):
-    def __init__(self):
+    def __init__(self, token: str):
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.get_style_context().add_class("window-phone")
+        self.token = token
+        global tokeng
+        tokeng = self.token
 
         # LISTE DE CONTACTS
 
-        self.contacts = [
-            {"name": "Boy", "phone": "+32111111111", "image": "img/contacts/boy1.jpg"},
-            {
-                "name": "Mom",
-                "phone": "+32222222222",
-                "image": "img/contacts/mom.jpg",
-            },
-            {
-                "name": "Man",
-                "phone": "+32333333333",
-                "image": "img/contacts/man.jpg",
-            },
-            {
-                "name": "Doctor",
-                "phone": "+32444444444",
-                "image": "img/contacts/doctor.jpeg",
-            },
-        ]
+        self.contacts = api.get_contacts(token)
 
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(b"""
@@ -76,18 +65,23 @@ class PhoneWindow(Gtk.Box):
         for wid in self.grid.get_children():
             self.grid.remove(wid)
 
+        self.contacts = api.get_contacts(tokeng)
+
+        if self.contacts is None:
+            return
         for index, contact in enumerate(self.contacts):
             button = Gtk.Button()
             button.get_style_context().add_class("button-contact")
 
             pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
-                contact["image"], width=300, height=300, preserve_aspect_ratio=True
+                contact["image_url"], width=300, height=300, preserve_aspect_ratio=True
             )
             button.set_image(Gtk.Image.new_from_pixbuf(pixbuf))
-            button.connect("clicked", self.on_contact_clicked, contact["phone"])
+            button.connect("clicked", self.on_contact_clicked, contact["phone_number"])
             self.grid.attach(button, index // 2, index % 2, 1, 1)
 
         self.grid.attach(self.plus, 0, (len(self.contacts) + 1) // 2, 2, 1)
+        self.grid.show_all()
 
     def on_contact_clicked(self, widget, phone_number):
         subprocess.run(["skype", f"tel:{phone_number}"], check=True)
@@ -125,7 +119,7 @@ class PhoneWindow(Gtk.Box):
 
             if name and phone and image:
                 # Ajouter le nouveau contact
-                self.contacts.append({"name": name, "phone": phone, "image": image})
+                api.add_contact(tokeng, name, phone, image)
                 self.update_contacts()
 
         dialog.destroy()

@@ -49,6 +49,23 @@ def get_contacts(token):
         # Affichage de la réponse
         if response.status_code == 200:
             print("Liste des contacts :", response.json())
+            return response.json()
+        else:
+            print(f"Erreur {response.status_code} :", response.text)
+            return None
+    except requests.exceptions.RequestException as e:
+        print("Erreur lors de la connexion :", e)
+
+
+def add_contact(token, name, phone, image):
+    headers = {"Authorization": f"Bearer {token}"}
+    try:
+        # Envoi de la requête POST
+        data = {"name": name, "phone_number": phone, "image_url": image}
+        response = requests.post(url + "/contacts", headers=headers, json=data)
+        # Affichage de la réponse
+        if response.status_code == 200:
+            print("Contact ajouté :", response.json())
         else:
             print(f"Erreur {response.status_code} :", response.text)
     except requests.exceptions.RequestException as e:
