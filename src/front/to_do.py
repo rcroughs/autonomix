@@ -7,22 +7,21 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GdkPixbuf, Gdk, GLib
 
 
-class AccessibleTodoListWindow(Gtk.Window):
+class AccessibleTodoListWindow(Gtk.Box):
     def __init__(self):
-        super().__init__(title="To-Do List")
+        super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=0)
         self.clicked = []
-        self.set_border_width(20)
-        self.maximize()
-
+        self.get_style_context().add_class("window-todo")
 
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(b"""
-                window {
+                .window-todo {
                     background-color: #003366; 
                 }
                 .blue-box {
                     background-color: #003366;  
-                    padding: 10px;
+                    margin:0;
+                    padding:0; 
                 }
                 .countdown-label {
                     font-size: 35px;  
@@ -48,12 +47,27 @@ class AccessibleTodoListWindow(Gtk.Window):
 
         self.button_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         self.button_box.get_style_context().add_class("blue-box")
+        self.button_box.set_margin_start(0)
+        self.button_box.set_margin_end(0)
+        self.button_box.set_margin_top(0)
+        self.button_box.set_margin_bottom(0)
         vbox.pack_start(self.button_box, False, False, 0)
 
 
         clear_button = Gtk.Button()
-        image_trash = Gtk.Image.new_from_file("img/to_do/trash.png")
-        clear_button.set_image(image_trash)
+        clear_button.set_valign(Gtk.Align.END)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
+            "img/shopping_icons/trash.png",
+            width=50,
+            height=50,
+            preserve_aspect_ratio=True,
+        )
+        clear_image = Gtk.Image.new_from_pixbuf(pixbuf)
+        clear_button.set_image(clear_image)
+        clear_button.set_margin_start(0)
+        clear_button.set_margin_end(0)
+        clear_button.set_margin_top(0)
+        clear_button.set_margin_bottom(0)
         clear_button.connect("clicked", self.clear_tasks)
         vbox.pack_start(clear_button, False, False, 0)
 
@@ -63,6 +77,10 @@ class AccessibleTodoListWindow(Gtk.Window):
         scrolled_window_tasks.set_size_request(-1, 300)
         self.listbox = Gtk.ListBox()
         self.listbox.get_style_context().add_class("blue-box")
+        self.listbox.set_margin_start(0)
+        self.listbox.set_margin_end(0)
+        self.listbox.set_margin_top(0)
+        self.listbox.set_margin_bottom(0)
         scrolled_window_tasks.add(self.listbox)
         vbox.pack_start(scrolled_window_tasks, True, True, 0)
 
@@ -86,10 +104,12 @@ class AccessibleTodoListWindow(Gtk.Window):
 
     def add_image_to_buttons(self, img_path, description, index):
         button = Gtk.Button()
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(img_path, 300, 300, True)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(img_path, 200, 200, True)
         image = Gtk.Image.new_from_pixbuf(pixbuf)
         button.set_image(image)
         button.set_tooltip_text(description)
+        button.set_margin_start(10)
+        button.set_margin_top(10)
         button.connect("clicked", self.on_image_clicked, img_path)
         self.button_box.pack_start(button, False, False, 0)
 
@@ -177,7 +197,7 @@ class AccessibleTodoListWindow(Gtk.Window):
 
 class DateTimePickerDialog(Gtk.Dialog):
     def __init__(self, parent):
-        super().__init__(title="Sélectionner date et heure", transient_for=parent, flags=0)
+        super().__init__(title="Sélectionner date et heure", flags=0)
         self.add_buttons(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OK, Gtk.ResponseType.OK)
         self.calendar = Gtk.Calendar()
         self.time_entry = Gtk.Entry()
@@ -187,7 +207,8 @@ class DateTimePickerDialog(Gtk.Dialog):
         box.add(self.calendar)
         box.add(Gtk.Label(label="Entrez l'heure (HH:MM):"))
         box.add(self.time_entry)
-        self.show_all()
+        box.show_all()
+
 
     def get_datetime(self):
         year, month, day = self.calendar.get_date()
@@ -195,11 +216,4 @@ class DateTimePickerDialog(Gtk.Dialog):
         date = f"{year}-{month:02d}-{day:02d}"
         time_str = self.time_entry.get_text()
         return date, time_str
-
-
-# Lancement de l'application
-win = AccessibleTodoListWindow()
-win.connect("destroy", Gtk.main_quit)
-win.show_all()
-Gtk.main()
 

@@ -7,6 +7,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GdkPixbuf, Gdk
 from telephone import PhoneWindow
 from shopping_list import ShoppingMenu
+from to_do import AccessibleTodoListWindow
 import requests
 import os.path
 import api
@@ -168,6 +169,17 @@ class MyApp(Gtk.Application):
         # screen.pack_start(label, False, False, 0)
         # screen.pack_start(return_button, False, False, 0)
         stack.add_named(screen_phone, "screen4")  # Ensure screen name is consistent
+
+        screen_todo = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        todo = AccessibleTodoListWindow()
+        return_button = Gtk.Button(label="←")
+        return_button.get_style_context().add_class("return-button")
+        return_button.set_halign(Gtk.Align.START)
+        return_button.connect("clicked", self.show_screen, stack, "main_menu")
+        screen_todo.pack_start(return_button, False, False, 0)
+        screen_todo.pack_start(todo, True, True, 0)
+        stack.add_named(screen_todo, "screen2")
+        
 
         shopping_screen = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         shopping = ShoppingMenu()
