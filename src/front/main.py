@@ -1,9 +1,46 @@
+from typing_extensions import Optional
 import gi
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GdkPixbuf, Gdk
 from telephone import PhoneWindow
 from shopping_list import ShoppingMenu
+import requests
+
+url = "http://127.0.0.1:5000"
+toker = None
+
+
+def register(name, mail, password):
+    data = {"name": name, "mail": mail, "password": password}
+    try:
+        # Envoi de la requête POST
+        response = requests.post(url + "/auth/register", json=data)
+
+        # Affichage de la réponse
+        if response.status_code == 200:
+            print("Enregistrement réussi :", response.json())
+        else:
+            print(f"Erreur {response.status_code} :", response.text)
+
+    except requests.exceptions.RequestException as e:
+        print("Erreur lors de la connexion :", e)
+
+
+def login(mail, password) -> Optional[str]:
+    data = {"mail": mail, "password": password}
+    try:
+        # Envoi de la requête POST
+        response = requests.post(url + "/auth/login", json=data)
+        # Affichage de la réponse
+        if response.status_code == 200:
+            print("Connexion réussie :", response.json())
+            return response.json()["token"]
+        else:
+            print(f"Erreur {response.status_code} :", response.text)
+            return None
+    except requests.exceptions.RequestException as e:
+        print("Erreur lors de la connexion :", e)
 
 
 class LoginWindow(Gtk.Window):
@@ -17,8 +54,8 @@ class LoginWindow(Gtk.Window):
         self.add(layout)
 
         # Username
-        self.username_entry = Gtk.Entry()
-        self.username_entry.set_placeholder_text("Username")
+        self.email_entry = Gtk.Entry()
+        self.email_entry.set_placeholder_text("Email")
         layout.pack_start(self.username_entry, False, False, 0)
 
         # Password
@@ -39,11 +76,11 @@ class LoginWindow(Gtk.Window):
         layout.show_all()
 
     def on_login_clicked(self, button):
-        username = self.username_entry.get_text()
+        email = self.email_entry.get_text()
         password = self.password_entry.get_text()
 
         # Replace with your authentication logic
-        if username == "user" and password == "pass":
+        if email == "user" and password == "pass":
             self.feedback_label.set_text("Login successful!")
             self.hide()  # Hide the login window
             app = MyApp()
