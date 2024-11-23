@@ -60,7 +60,12 @@ class MyWindow(Gtk.Window):
         # Connecter l'événement pour quitter le plein écran avec Échap (facultatif)
         self.connect("key-press-event", self.on_key_press_event)
 
+	def on_button_clicked(self, widget, button_name):
+		print(f"{button_name} cliqué")
 
+    def on_key_press_event(self, widget, event):
+        if event.keyval == Gdk.KEY_Escape:
+            self.unmaximize()  # Quitte le mode maximisé
 
 # Initialiser l'application
 win = MyWindow()
