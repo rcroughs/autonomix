@@ -8,8 +8,12 @@ from gi.repository import Gtk, Gdk, GdkPixbuf
 class ShoppingMenu(Gtk.Box):
     def __init__(self):
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        self.get_style_context().add_class("window-shop")
+
+
         self.white_circle_path = "img/shopping_icons/cropped_image(1).png"
         self.green_circle_path = "img/shopping_icons/cropped_image.png"
+
         # LISTE DE COURSES
         self.items = [
             "img/shopping_icons/184532.png",
@@ -77,10 +81,10 @@ class ShoppingMenu(Gtk.Box):
 
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(b"""
-            window {
+            .window-shop {
                 background-color: #B36BF9;
             }
-            button {
+            .button-shop {
                 background-color: transparent;
                 border-radius: 10px;
             }
@@ -177,6 +181,8 @@ class ShoppingMenu(Gtk.Box):
             toggle.set_image(Gtk.Image.new_from_pixbuf(
                 GdkPixbuf.Pixbuf.new_from_file_at_scale(self.white_circle_path, width=30, height=30, preserve_aspect_ratio=True)
             ))
+            toggle.get_style_context().add_class("button-shop")
+
 
             # Connect the toggle functionality
             self.toggle_state = False
