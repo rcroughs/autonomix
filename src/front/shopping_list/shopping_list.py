@@ -10,7 +10,7 @@ class ShoppingMenu(Gtk.Window):
 
         self.white_circle_path = "front/img/shopping_icons/cropped_image(1).png"
         self.green_circle_path = "front/img/shopping_icons/cropped_image.png"
-        self.toggle_data = False
+        #self.toggle_data = False
 
 
         # LISTE DE COURSES
@@ -208,9 +208,7 @@ class ShoppingMenu(Gtk.Window):
             toggle_button.set_image(Gtk.Image.new_from_pixbuf(
                 GdkPixbuf.Pixbuf.new_from_file_at_scale(self.white_circle_path, width=30, height=30, preserve_aspect_ratio=True)
             ))
-
-
-    
+        self.toggle_state = False
 
 
 shoppingWindow = ShoppingMenu()
