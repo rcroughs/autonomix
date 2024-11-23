@@ -23,10 +23,10 @@ class PhoneWindow(Gtk.Box):
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(b"""
             .window-phone {
-                background-color: #58855C;
+                background-color: #84a98c;
             }
             .button-contact {
-                background-color: #2BF52E;
+                background-color: #386641;
                 border-radius: 10px;
             }
         """)

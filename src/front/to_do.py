@@ -16,10 +16,10 @@ class AccessibleTodoListWindow(Gtk.Box):
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(b"""
                 .window-todo {
-                    background-color: #003366; 
+                    background-color: #90caf9; 
                 }
                 .blue-box {
-                    background-color: #003366;  
+                    background-color: #90caf9;  
                     margin:0;
                     padding:0; 
                 }
@@ -88,9 +88,9 @@ class AccessibleTodoListWindow(Gtk.Box):
         self.image_paths = [
             ("img/to_do/chien.png", "Image 1"),
             ("img/to_do/clean.png", "Image 2"),
-            ("img/to_do/groceries.png", "Image 4"),
-            ("img/to_do/doctor.png", "Image 5"),
-            ("img/to_do/pills.png", "Image 6")
+            ("img/to_do/groceries.jpg", "Image 4"),
+            ("img/to_do/doctor.jpeg", "Image 5"),
+            ("img/to_do/pills.jpg", "Image 6")
         ]
 
 
@@ -137,7 +137,7 @@ class AccessibleTodoListWindow(Gtk.Box):
         self.clicked.append((circle_button, False))
 
 
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(img_path, 100, 100, True)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(img_path, 150, 150, True)
         image = Gtk.Image.new_from_pixbuf(pixbuf)
 
 
@@ -169,7 +169,7 @@ class AccessibleTodoListWindow(Gtk.Box):
                 days, seconds = divmod(int(remaining.total_seconds()), 86400)
                 hours, seconds = divmod(seconds, 3600)
                 minutes, _ = divmod(seconds, 60)
-                countdown_str = f"       <span size='x-large'>{days}☀️ {hours}🕐 {minutes}⏱️ restants</span>"
+                countdown_str = f"       <span size='x-large'>{days}☀️ {hours}🕐 {minutes}⏱️ </span>"
                 GLib.idle_add(label.set_markup, countdown_str)
 
                 # Appliquer la classe CSS au label

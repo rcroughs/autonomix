@@ -70,7 +70,7 @@ class MyApp(Gtk.Application):
         self.pixbuf1 = GdkPixbuf.Pixbuf.new_from_file("img/main_menu/food.png")
         self.pixbuf2 = GdkPixbuf.Pixbuf.new_from_file("img/main_menu/todo.png")
         self.pixbuf3 = GdkPixbuf.Pixbuf.new_from_file("img/main_menu/courses.png")
-        self.pixbuf4 = GdkPixbuf.Pixbuf.new_from_file("img/main_menu/tel.png")
+        self.pixbuf4 = GdkPixbuf.Pixbuf.new_from_file("img/main_menu/phone.png")
         self.previous_window_size = None  # Track the previous window size
         self.token = token
         css_provider = Gtk.CssProvider()
@@ -204,16 +204,16 @@ class MyApp(Gtk.Application):
 
     def update_images(self, wscale, hscale):
         self.pixbuf1 = self.pixbuf1.scale_simple(
-            wscale, hscale, GdkPixbuf.InterpType.BILINEAR
+            hscale*1.18, hscale, GdkPixbuf.InterpType.BILINEAR
         )
         self.pixbuf2 = self.pixbuf2.scale_simple(
-            wscale, hscale, GdkPixbuf.InterpType.BILINEAR
+            hscale, hscale, GdkPixbuf.InterpType.BILINEAR
         )
         self.pixbuf3 = self.pixbuf3.scale_simple(
-            wscale, hscale, GdkPixbuf.InterpType.BILINEAR
+            hscale * 1.13, hscale, GdkPixbuf.InterpType.BILINEAR
         )
         self.pixbuf4 = self.pixbuf4.scale_simple(
-            wscale, hscale, GdkPixbuf.InterpType.BILINEAR
+            hscale*1.23, hscale, GdkPixbuf.InterpType.BILINEAR
         )
 
     def do_resize(self, window):
