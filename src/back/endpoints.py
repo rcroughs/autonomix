@@ -7,13 +7,20 @@ from db import Database
 from data import *
 import os
 
-app = Flask(__name__)
 
-db = Database('database.db', 'ddl.sql')
+def create_app(testing=False):
+    app = Flask(__name__)
+    # Token d'authentification
+    app.config['SECRET_KEY'] = 'autonomixmax'
 
-# Token d'authentification
-app.config['SECRET_KEY'] = 'autonomixmax'
+    if testing:
+        app.db = Database(":memory:", 'ddl.sql')
+    else:
+        app.db = Database('database.db', 'ddl.sql')
+    return app
 
+app = create_app(True)
+db = app.db
 # -------------Authentification-------------
 @app.route('/auth/login', methods=['POST'])
 def login():
@@ -23,7 +30,10 @@ def login():
     if not data:
         return jsonify({"error": "Invalid Data"}), 400
 
-    user_id = data["id"]
+    user_id = -1
+    if db.get_user_by_email(data["mail"]):
+        user_id = db.get_user_by_email(data["mail"]).id
+
     user = db.get_user(user_id)
     if not user or user.name != data["name"]:
         return jsonify({"error": "Invalid User"}), 401
@@ -49,8 +59,8 @@ def register():
     if existing_user:
         return jsonify({"error": "User already exists"}), 409
 
-    secured_password = generate_password_hash(data["password"], method="sha256")
-    new_user = data.User(
+    secured_password = generate_password_hash(data["password"], method="pbkdf2:sha256")
+    new_user = User(
         id=None,
         name=data["name"],
         mail=data["mail"],

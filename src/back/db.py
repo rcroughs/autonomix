@@ -14,12 +14,16 @@ class Database:
     def get_user(self, user_id: int) -> data.User:
         self.cursor.execute("SELECT * FROM users WHERE id = ?", (user_id,))
         result = self.cursor.fetchone()
-        return data.User(result[0], result[1], result[2], result[3])
+
+        if result:
+            return data.User(result[0], result[1], result[2], result[3])
 
     def get_user_by_email(self, email: str) -> data.User:
         self.cursor.execute("SELECT * FROM users WHERE mail = ?", (email,))
         result = self.cursor.fetchone()
-        return data.User(result[0], result[1], result[2], result[3])
+
+        if result:
+            return data.User(result[0], result[1], result[2], result[3])
 
     def get_users(self) -> list[data.User]:
         self.cursor.execute("SELECT * FROM users")
