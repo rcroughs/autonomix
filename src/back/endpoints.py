@@ -26,6 +26,8 @@ db = app.db
 
 
 def check_auth(token):
+    token = token.split(" ")[1]
+    print(token)
     try:
         jwt.decode(token, app.config["SECRET_KEY"], algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
@@ -36,6 +38,7 @@ def check_auth(token):
 
 
 def get_user_id(token) -> Optional[int]:
+    token = token.split(" ")[1]
     try:
         return jwt.decode(token, app.config["SECRET_KEY"], algorithms=["HS256"])[
             "user_id"
