@@ -1,4 +1,4 @@
-from typing_extensions import Optional
+from typing import Optional
 import gi
 
 gi.require_version("Gtk", "3.0")
@@ -8,7 +8,7 @@ from shopping_list import ShoppingMenu
 import requests
 
 url = "http://127.0.0.1:5000"
-toker = None
+token = None
 
 
 def register(name, mail, password):
@@ -28,6 +28,7 @@ def register(name, mail, password):
 
 
 def login(mail, password) -> Optional[str]:
+    global token
     data = {"mail": mail, "password": password}
     try:
         # Envoi de la requête POST
@@ -35,12 +36,14 @@ def login(mail, password) -> Optional[str]:
         # Affichage de la réponse
         if response.status_code == 200:
             print("Connexion réussie :", response.json())
-            return response.json()["token"]
+            token = response.json()["token"]
+            return token
         else:
             print(f"Erreur {response.status_code} :", response.text)
             return None
     except requests.exceptions.RequestException as e:
         print("Erreur lors de la connexion :", e)
+        return None
 
 
 class LoginWindow(Gtk.Window):
@@ -56,7 +59,7 @@ class LoginWindow(Gtk.Window):
         # Username
         self.email_entry = Gtk.Entry()
         self.email_entry.set_placeholder_text("Email")
-        layout.pack_start(self.username_entry, False, False, 0)
+        layout.pack_start(self.email_entry, False, False, 0)
 
         # Password
         self.password_entry = Gtk.Entry()
@@ -80,7 +83,8 @@ class LoginWindow(Gtk.Window):
         password = self.password_entry.get_text()
 
         # Replace with your authentication logic
-        if email == "user" and password == "pass":
+        response = login(email, password)
+        if response is not None:
             self.feedback_label.set_text("Login successful!")
             self.hide()  # Hide the login window
             app = MyApp()
@@ -245,5 +249,6 @@ def main():
     win.show_all()
     Gtk.main()
 
+register("sasha", "sasha", "sasha")
 
 main()
