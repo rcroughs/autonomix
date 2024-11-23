@@ -18,6 +18,11 @@ dependencies = [
   "PyJWT",
   "requests",
   "screeninfo",
+  "pipwin",
+  "SpeechRecognition",
+  "g4f",
+  "PyAudio",
+  "vosk",
 ]
 
 [project.urls]
