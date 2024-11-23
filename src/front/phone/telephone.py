@@ -10,19 +10,20 @@ class PhoneWindow(Gtk.Window):
         # LISTE DE CONTACTS
 
         self.contacts = [
-            {"name": "Boy", "phone": "+32111111111", "image": "/home/sasha/Documents/autonomix/images_phone/boy1.jpg"},
-            {"name": "Mom", "phone": "+32222222222", "image": "/home/sasha/Documents/autonomix/images_phone/mom.jpg"},
-            {"name": "Man", "phone": "+32333333333", "image": "/home/sasha/Documents/autonomix/images_phone/man.jpg"},
-            {"name": "Doctor", "phone": "+32444444444", "image": "/home/sasha/Documents/autonomix/images_phone/doctor.jpeg"}
+            {"name": "Boy", "phone": "+32111111111", "image": "/home/sasha/Documents/autonomix/src/front/phone/boy1.jpg"},
+            {"name": "Mom", "phone": "+32222222222", "image": "/home/sasha/Documents/autonomix/src/front/phone/mom.jpg"},
+            {"name": "Man", "phone": "+32333333333", "image": "/home/sasha/Documents/autonomix/src/front/phone/man.jpg"},
+            {"name": "Doctor", "phone": "+32444444444", "image": "/home/sasha/Documents/autonomix/src/front/phone/doctor.jpeg"}
         ]
 
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(b"""
             window {
-                background-color: #83F58B;
+                background-color: #58855c;
             }
             button {
-                background-color: #2BF52E;  /* Blue background */
+                background-color: #2BF52E;
+                border-radius: 10px;
             }
         """)
         
@@ -48,7 +49,7 @@ class PhoneWindow(Gtk.Window):
         #plus
         self.plus = Gtk.Button()
         pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
-            "/home/sasha/Documents/autonomix/images_phone/plus.png", 
+            "/home/sasha/Documents/autonomix/src/front/phone/plus.png", 
             width=150,  # Set appropriate width
             height=150,  # Set appropriate height
             preserve_aspect_ratio=True
@@ -84,6 +85,7 @@ class PhoneWindow(Gtk.Window):
     def on_plus_clicked(self, widget):
         dialog = Gtk.Dialog(title="Add Contact", transient_for=self, flags=0)
         dialog.add_buttons(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL, Gtk.STOCK_OK, Gtk.ResponseType.OK)
+        dialog.set_default_size(400,400)
 
         box = dialog.get_content_area()
 
