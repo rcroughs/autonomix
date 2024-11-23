@@ -8,6 +8,11 @@ class ShoppingMenu(Gtk.Window):
         super().__init__(title="Shopping List")
         self.maximize()
 
+        self.white_circle_path = "front/img/shopping_icons/cropped_image(1).png"
+        self.green_circle_path = "front/img/shopping_icons/cropped_image.png"
+        self.toggle_data = False
+
+
         # LISTE DE COURSES
         self.items = ["front/img/shopping_icons/184532.png",
             "front/img/shopping_icons/395211.png",
@@ -75,7 +80,6 @@ class ShoppingMenu(Gtk.Window):
                 background-color: #B36BF9;
             }
             button {
-                background-color: #2BF52E;
                 border-radius: 10px;
             }
             .quantity-label {
@@ -161,14 +165,22 @@ class ShoppingMenu(Gtk.Window):
 
             # Create a label to show the quantity
             quantity_label = Gtk.Label(label=f"{quantity}")
-            quantity_label.set_justify(Gtk.Justification.LEFT)
-            quantity_label.set_xalign(0)
-
             quantity_label.get_style_context().add_class("quantity-label")
+            toggle = Gtk.Button()
+            toggle.set_relief(Gtk.ReliefStyle.NONE)
+            toggle.set_image(Gtk.Image.new_from_pixbuf(
+                GdkPixbuf.Pixbuf.new_from_file_at_scale(self.white_circle_path, width=30, height=30, preserve_aspect_ratio=True)
+            ))
+
+            # Connect the toggle functionality
+            self.toggle_state = False
+            toggle.connect("clicked", self.toggle_circle, toggle)
 
             # Add the image and label to the horizontal box
             item_box.pack_start(quantity_label, False, False, 0)
             item_box.pack_start(image, False, False, 0)
+            item_box.pack_start(toggle, False, False, 0)
+
 
             # Add the item box to the shopping list box
             self.shopping_list_box.add(item_box)
@@ -179,6 +191,26 @@ class ShoppingMenu(Gtk.Window):
     def erase_everything(self, button):
         self.shopping_list.clear()
         self.update_shopping_list()
+
+
+    def toggle_circle(self, button, toggle_button):
+        # Toggle the state
+        new_state = not self.toggle_state
+        self.toggle_state = new_state
+        # Update the image based on the new state
+        if new_state:
+            # Set to green circle
+            toggle_button.set_image(Gtk.Image.new_from_pixbuf(
+                GdkPixbuf.Pixbuf.new_from_file_at_scale(self.green_circle_path, width=30, height=30, preserve_aspect_ratio=True)
+            ))
+        else:
+            # Set to white circle
+            toggle_button.set_image(Gtk.Image.new_from_pixbuf(
+                GdkPixbuf.Pixbuf.new_from_file_at_scale(self.white_circle_path, width=30, height=30, preserve_aspect_ratio=True)
+            ))
+
+
+    
 
 
 shoppingWindow = ShoppingMenu()
