@@ -10,7 +10,7 @@ authors = [
   { name = "Oleksandra Omelyanyuk" },
   { name = "Kamila Mortel" },
 ]
-dependencies = []
+dependencies = ["pytest"]
 
 [project.urls]
 "Homepage" = "https://github.com/rcroughs/autonomix"
