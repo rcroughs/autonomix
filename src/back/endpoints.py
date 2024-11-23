@@ -71,6 +71,36 @@ def register():
 
     return jsonify({"message": "User registered successfully"}), 201
 
+# -------------Ingredients---------
+@app.route('/ingredient', methods=['GET'])
+def get_ingredients():
+    # Fetch les ingrédients
+    ingredients = db.get_ingredients()
+
+    # Formatage
+    ingredients_list = [
+        {"id":ingredient.id, "name":ingredient.name, "icon_id":ingredient.icon_id}
+        for ingredient in ingredients
+    ]
+    return jsonify(ingredients_list), 200
+
+@app.route('/ingredient', methods=['POST'])
+def post_ingredient():
+    data = request.json
+
+    if not data:
+        return jsonify({"error": "Invalid Data"}), 400
+
+    new_ingredient = Ingredient(
+        id=None,
+        name=data["name"],
+        icon_id=data["icon_id"]
+    )
+    db.add_ingredient(new_ingredient)
+    db.commit()
+
+    return jsonify({"message": "ingredient added successfully"}), 200
+
 # -------------Recipes-------------
 @app.route('/recipes', methods=['GET'])
 def get_recipes():
@@ -99,11 +129,6 @@ def post_recipe():
         image_url=data["image_url"]
     )
     recipe_id = NotImplemented#db.add_recipe(new_recipe)
-
-    # Ajouter les ingrédients associés
-    for ingredient in data["ingredients"]:
-        db.add_ingredient(ingredient)
-    db.commit()
 
     return jsonify({"message": "Recipe added successfully", "id": recipe_id}), 201
 
@@ -230,7 +255,6 @@ def get_image():
             return jsonify({"image": encoded_image})
     else:
         return jsonify({"message": f"L'image {img_name} n'existe pas"})
-
 
 
 

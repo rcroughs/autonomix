@@ -2,8 +2,8 @@ from endpoints import app
 
 url= "http://127.0.0.1:5000" # Adresse locale du serveur flask
 
-# ----------Authentification----------
 with app.test_client() as client:
+    # ----------Authentification----------
     """
     Test de register : Success
     """
@@ -62,4 +62,32 @@ with app.test_client() as client:
         print(f"Connexion réussie : code {response.status_code}")
     else:
         print(f"Erreur lors de la connexion : code {response.status_code}")
+
+    # ----------Ingredients----------
+    """
+    Add Ingredients : success
+    """
+    new_ingredients = [("egg", 1), ("flour", 2), ("sugar", 3)]
+    for ingredient in new_ingredients:
+        ing = {
+            "name": ingredient[0],
+            "icon_id": ingredient[1]
+        }
+        response = client.post(url + "/ingredient", json=ing)
+        if response.status_code == 200:
+            print(f"Ingredient added : {ingredient[0]}, code {response.status_code}")
+    """
+    Get Ingredients : success
+    """
+    response = client.get(url + "/ingredient")
+    if response.status_code == 200:
+        print(f"Ingredients fetched successfully : code {response.status_code} ")
+
+    # ----------Recipe----------
+    """
+    Create Recipe : success
+    """
+
+
+
 
