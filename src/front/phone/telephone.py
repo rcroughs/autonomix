@@ -10,10 +10,10 @@ class PhoneWindow(Gtk.Window):
         # LISTE DE CONTACTS
 
         self.contacts = [
-            {"name": "Boy", "phone": "+32111111111", "image": "/home/sasha/Documents/autonomix/src/front/phone/boy1.jpg"},
-            {"name": "Mom", "phone": "+32222222222", "image": "/home/sasha/Documents/autonomix/src/front/phone/mom.jpg"},
-            {"name": "Man", "phone": "+32333333333", "image": "/home/sasha/Documents/autonomix/src/front/phone/man.jpg"},
-            {"name": "Doctor", "phone": "+32444444444", "image": "/home/sasha/Documents/autonomix/src/front/phone/doctor.jpeg"}
+            {"name": "Boy", "phone": "+32111111111", "image": "front/img/shopping_icons/boy1.jpg"},
+            {"name": "Mom", "phone": "+32222222222", "image": "front/img/shopping_icons/mom.jpg"},
+            {"name": "Man", "phone": "+32333333333", "image": "front/img/shopping_icons/man.jpg"},
+            {"name": "Doctor", "phone": "+32444444444", "image": "front/img/shopping_icons/doctor.jpeg"}
         ]
 
         css_provider = Gtk.CssProvider()
@@ -49,7 +49,7 @@ class PhoneWindow(Gtk.Window):
         #plus
         self.plus = Gtk.Button()
         pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
-            "/home/sasha/Documents/autonomix/src/front/phone/plus.png", 
+            "front/img/shopping_icons/plus.png", 
             width=150,  # Set appropriate width
             height=150,  # Set appropriate height
             preserve_aspect_ratio=True
