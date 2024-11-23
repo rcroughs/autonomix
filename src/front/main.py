@@ -2,6 +2,7 @@ import gi
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GdkPixbuf
+from telephone import PhoneWindow
 
 
 class MyApp(Gtk.Application):
@@ -63,19 +64,23 @@ class MyApp(Gtk.Application):
         self.button3.connect("clicked", self.show_screen, stack, "screen3")
         self.button4.connect("clicked", self.show_screen, stack, "screen4")
 
+        # Main Menu screen
         stack.add_named(grid, "main_menu")
 
         # Sub-screens
-        for i in range(5):
-            screen = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-            label = Gtk.Label(label=f"This is screen {i + 1}")
-            return_button = Gtk.Button(label="Return")
-            return_button.connect("clicked", self.show_screen, stack, "main_menu")
-            screen.pack_start(label, False, False, 0)
-            screen.pack_start(return_button, False, False, 0)
-            stack.add_named(screen, f"screen{i + 1}")
+        screen = PhoneWindow()
+        # # label = Gtk.Label(label=f"This is screen")
+        # return_button = Gtk.Button(label="Return")
+        # return_button.connect("clicked", self.show_screen, stack, "main_menu")
+        # screen.pack_start(label, False, False, 0)
+        # screen.pack_start(return_button, False, False, 0)
+        stack.add_named(screen, "screen4")  # Ensure screen name is consistent
 
         window.add(stack)
+
+        # Set the default visible child of the stack to be 'main_menu'
+        stack.set_visible_child_name("main_menu")
+
         window.show_all()
 
     def update_images(self, wscale, hscale):
