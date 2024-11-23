@@ -4,7 +4,9 @@ import data
 
 class Database:
     def __init__(self, db_path: str, ddl_path: str) -> None:
-        self.connection: sqlite3.Connection = sqlite3.connect(db_path)
+        self.connection: sqlite3.Connection = sqlite3.connect(
+            db_path, check_same_thread=False
+        )
         self.cursor: sqlite3.Cursor = self.connection.cursor()
         with open(ddl_path, "r") as ddl_file:
             ddl_script = ddl_file.read()

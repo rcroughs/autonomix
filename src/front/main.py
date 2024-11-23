@@ -6,6 +6,52 @@ from telephone import PhoneWindow
 from shopping_list import ShoppingMenu
 
 
+class LoginWindow(Gtk.Window):
+    def __init__(self):
+        super().__init__(title="Login")
+        self.set_border_width(10)
+        self.set_default_size(300, 200)
+
+        # Main layout
+        layout = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        self.add(layout)
+
+        # Username
+        self.username_entry = Gtk.Entry()
+        self.username_entry.set_placeholder_text("Username")
+        layout.pack_start(self.username_entry, False, False, 0)
+
+        # Password
+        self.password_entry = Gtk.Entry()
+        self.password_entry.set_placeholder_text("Password")
+        self.password_entry.set_visibility(False)  # Hide password input
+        layout.pack_start(self.password_entry, False, False, 0)
+
+        # Login button
+        self.login_button = Gtk.Button(label="Login")
+        self.login_button.connect("clicked", self.on_login_clicked)
+        layout.pack_start(self.login_button, False, False, 0)
+
+        # Feedback label
+        self.feedback_label = Gtk.Label()
+        layout.pack_start(self.feedback_label, False, False, 0)
+
+        layout.show_all()
+
+    def on_login_clicked(self, button):
+        username = self.username_entry.get_text()
+        password = self.password_entry.get_text()
+
+        # Replace with your authentication logic
+        if username == "user" and password == "pass":
+            self.feedback_label.set_text("Login successful!")
+            self.hide()  # Hide the login window
+            app = MyApp()
+            app.run()
+        else:
+            self.feedback_label.set_text("Invalid credentials. Try again.")
+
+
 class MyApp(Gtk.Application):
     def __init__(self):
         super().__init__(application_id="com.example.autonomix")
@@ -156,5 +202,11 @@ class MyApp(Gtk.Application):
         stack.set_visible_child_name(screen_name)
 
 
-app = MyApp()
-app.run()
+def main():
+    win = LoginWindow()
+    win.connect("destroy", Gtk.main_quit)
+    win.show_all()
+    Gtk.main()
+
+
+main()
