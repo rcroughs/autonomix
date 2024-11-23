@@ -102,6 +102,23 @@ class Database:
             (shopping.user_id, shopping.category_id, shopping.amount),
         )
 
+    def add_recipe(self, recipe: data.Recipe) -> None:
+        self.cursor.execute(
+            "INSERT INTO recipes (name, difficulty, json, image_url) VALUES (?, ?, ?, ?)",
+            (
+                recipe.name,
+                recipe.difficulty,
+                recipe.json,
+                recipe.image_url,
+            ),
+        )
+
+    def add_ingredient(self, ingredient: data.Ingredient) -> None:
+        self.cursor.execute(
+            "INSERT INTO ingredients (name, icon_id) VALUES (?, ?)",
+            (ingredient.name, ingredient.icon_id),
+        )
+
     def remove_todo_list(self, todo_id: int) -> None:
         self.cursor.execute("DELETE FROM todo WHERE id = ?", (todo_id,))
 

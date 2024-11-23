@@ -27,16 +27,16 @@ class User:
 
 
 class Todo:
-    id: int
+    id: Optional[int]
     user_id: int
     category_id: int
 
-    def __init__(self, id: int, user_id: int, category_id: int):
+    def __init__(self, id: Optional[int], user_id: int, category_id: int):
         self.id = id
         self.user_id = user_id
         self.category_id = category_id
 
-    def get_id(self) -> int:
+    def get_id(self) -> Optional[int]:
         return self.id
 
     def get_user_id(self) -> int:
@@ -82,20 +82,22 @@ class RecipeIngredient:
 
 
 class Recipe:
-    id: int
+    id: Optional[int]
     name: str
     difficulty: int
     json: str
     image_url: str
 
-    def __init__(self, id: int, name: str, difficulty: int, json: str, image_url: str):
+    def __init__(
+        self, id: Optional[int], name: str, difficulty: int, json: str, image_url: str
+    ):
         self.id = id
         self.name = name
         self.difficulty = difficulty
         self.json = json
         self.image_url = image_url
 
-    def get_id(self) -> int:
+    def get_id(self) -> Optional[int]:
         return self.id
 
     def get_name(self) -> str:
@@ -112,16 +114,16 @@ class Recipe:
 
 
 class Ingredient:
-    id: int
+    id: Optional[int]
     name: str
     icon_id: int
 
-    def __init__(self, id: int, name: str, icon_id: int):
+    def __init__(self, id: Optional[int], name: str, icon_id: int):
         self.id = id
         self.name = name
         self.icon_id = icon_id
 
-    def get_id(self) -> int:
+    def get_id(self) -> Optional[int]:
         return self.id
 
     def get_name(self) -> str:
@@ -132,16 +134,16 @@ class Ingredient:
 
 
 class Category:
-    id: int
+    id: Optional[int]
     name: str
     icon_id: int
 
-    def __init__(self, id: int, name: str, icon_id: int):
+    def __init__(self, id: Optional[int], name: str, icon_id: int):
         self.id = id
         self.name = name
         self.icon_id = icon_id
 
-    def get_id(self) -> int:
+    def get_id(self) -> Optional[int]:
         return self.id
 
     def get_name(self) -> str:
