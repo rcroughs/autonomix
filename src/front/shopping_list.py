@@ -60,6 +60,7 @@ class ShoppingMenu(Gtk.Box):
 
         # Erase Everything button
         erase_button = Gtk.Button()
+        erase_button.set_valign(Gtk.Align.END)
         pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
             "img/shopping_icons/trash.png",
             width=50,
