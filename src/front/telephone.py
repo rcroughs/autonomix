@@ -8,6 +8,7 @@ from gi.repository import Gtk, Gdk, GdkPixbuf
 class PhoneWindow(Gtk.Box):
     def __init__(self):
         super().__init__(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        self.get_style_context().add_class("window-phone")
 
         # LISTE DE CONTACTS
 
@@ -32,10 +33,10 @@ class PhoneWindow(Gtk.Box):
 
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(b"""
-            window {
+            .window-phone {
                 background-color: #58855C;
             }
-            button {
+            .button-contact {
                 background-color: #2BF52E;
                 border-radius: 10px;
             }
@@ -77,8 +78,10 @@ class PhoneWindow(Gtk.Box):
 
         for index, contact in enumerate(self.contacts):
             button = Gtk.Button()
+            button.get_style_context().add_class("button-contact")
+
             pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
-                contact["image"], width=400, height=400, preserve_aspect_ratio=True
+                contact["image"], width=300, height=300, preserve_aspect_ratio=True
             )
             button.set_image(Gtk.Image.new_from_pixbuf(pixbuf))
             button.connect("clicked", self.on_contact_clicked, contact["phone"])

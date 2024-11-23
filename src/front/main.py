@@ -1,9 +1,96 @@
+from typing import Optional
 import gi
 
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GdkPixbuf, Gdk
 from telephone import PhoneWindow
 from shopping_list import ShoppingMenu
+import requests
+
+url = "http://127.0.0.1:5000"
+token = None
+
+
+def register(name, mail, password):
+    data = {"name": name, "mail": mail, "password": password}
+    try:
+        # Envoi de la requête POST
+        response = requests.post(url + "/auth/register", json=data)
+
+        # Affichage de la réponse
+        if response.status_code == 200:
+            print("Enregistrement réussi :", response.json())
+        else:
+            print(f"Erreur {response.status_code} :", response.text)
+
+    except requests.exceptions.RequestException as e:
+        print("Erreur lors de la connexion :", e)
+
+
+def login(mail, password) -> Optional[str]:
+    global token
+    data = {"mail": mail, "password": password}
+    try:
+        # Envoi de la requête POST
+        response = requests.post(url + "/auth/login", json=data)
+        # Affichage de la réponse
+        if response.status_code == 200:
+            print("Connexion réussie :", response.json())
+            token = response.json()["token"]
+            return token
+        else:
+            print(f"Erreur {response.status_code} :", response.text)
+            return None
+    except requests.exceptions.RequestException as e:
+        print("Erreur lors de la connexion :", e)
+        return None
+
+
+class LoginWindow(Gtk.Window):
+    def __init__(self):
+        super().__init__(title="Login")
+        self.set_border_width(10)
+        self.set_default_size(300, 200)
+
+        # Main layout
+        layout = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        self.add(layout)
+
+        # Username
+        self.email_entry = Gtk.Entry()
+        self.email_entry.set_placeholder_text("Email")
+        layout.pack_start(self.email_entry, False, False, 0)
+
+        # Password
+        self.password_entry = Gtk.Entry()
+        self.password_entry.set_placeholder_text("Password")
+        self.password_entry.set_visibility(False)  # Hide password input
+        layout.pack_start(self.password_entry, False, False, 0)
+
+        # Login button
+        self.login_button = Gtk.Button(label="Login")
+        self.login_button.connect("clicked", self.on_login_clicked)
+        layout.pack_start(self.login_button, False, False, 0)
+
+        # Feedback label
+        self.feedback_label = Gtk.Label()
+        layout.pack_start(self.feedback_label, False, False, 0)
+
+        layout.show_all()
+
+    def on_login_clicked(self, button):
+        email = self.email_entry.get_text()
+        password = self.password_entry.get_text()
+
+        # Replace with your authentication logic
+        response = login(email, password)
+        if response is not None:
+            self.feedback_label.set_text("Login successful!")
+            self.hide()  # Hide the login window
+            app = MyApp()
+            app.run()
+        else:
+            self.feedback_label.set_text("Invalid credentials. Try again.")
 
 
 class MyApp(Gtk.Application):
@@ -156,5 +243,12 @@ class MyApp(Gtk.Application):
         stack.set_visible_child_name(screen_name)
 
 
-app = MyApp()
-app.run()
+def main():
+    win = LoginWindow()
+    win.connect("destroy", Gtk.main_quit)
+    win.show_all()
+    Gtk.main()
+
+register("sasha", "sasha", "sasha")
+
+main()
