@@ -1,16 +1,19 @@
+from typing import Optional
+
+
 class User:
-    id: int
+    id: Optional[int]
     name: str
     mail: str
     password: str
 
-    def __init__(self, id: int, name: str, mail: str, password: str):
+    def __init__(self, id: Optional[int], name: str, mail: str, password: str):
         self.id = id
         self.name = name
         self.mail = mail
         self.password = password
 
-    def get_id(self) -> int:
+    def get_id(self) -> Optional[int]:
         return self.id
 
     def get_name(self) -> str:

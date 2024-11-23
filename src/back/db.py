@@ -16,6 +16,11 @@ class Database:
         result = self.cursor.fetchone()
         return data.User(result[0], result[1], result[2], result[3])
 
+    def get_user_by_email(self, email: str) -> data.User:
+        self.cursor.execute("SELECT * FROM users WHERE mail = ?", (email,))
+        result = self.cursor.fetchone()
+        return data.User(result[0], result[1], result[2], result[3])
+
     def get_users(self) -> list[data.User]:
         self.cursor.execute("SELECT * FROM users")
         result = self.cursor.fetchall()
@@ -81,8 +86,8 @@ class Database:
 
     def add_user(self, user: data.User) -> None:
         self.cursor.execute(
-            "INSERT INTO users (id, name, email, password) VALUES (?, ?, ?, ?)",
-            (user.id, user.name, user.mail, user.password),
+            "INSERT INTO users (name, mail, password) VALUES (?, ?, ?)",
+            (user.name, user.mail, user.password),
         )
 
     def add_todo_list(self, todo: data.Todo) -> None:
@@ -112,3 +117,6 @@ class Database:
             "SELECT * FROM users WHERE mail = ? AND password = ?", (email, password)
         )
         return self.cursor.fetchone() is not None
+
+    def commit(self) -> None:
+        self.connection.commit()
