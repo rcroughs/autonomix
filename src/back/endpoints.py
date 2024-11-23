@@ -57,6 +57,7 @@ def register():
         password=secured_password
     )
     db.add_user(new_user)
+    db.commit()
 
     return jsonify({"message": "User registered successfully"}), 201
 
@@ -92,6 +93,7 @@ def post_recipe():
     # Ajouter les ingrédients associés
     for ingredient in data["ingredients"]:
         db.add_ingredient(ingredient)
+    db.commit()
 
     return jsonify({"message": "Recipe added successfully", "id": recipe_id}), 201
 
@@ -126,6 +128,7 @@ def add_todo():
         category_id=data["category_id"]
     )
     db.add_todo_list(new_todo)
+    db.commit()
 
     return jsonify({"message": "Todo added successfully"}), 201
 
@@ -160,6 +163,7 @@ def add_shopping_item():
         amount=data["amount"]
     )
     db.add_shopping_list(new_item)
+    db.commit()
 
     return jsonify({"message": "Shopping item added successfully"}), 201
 
@@ -196,6 +200,7 @@ def add_contact():
         image_url=data["image_url"]
     )
     db.add_contact(new_contact)
+    db.commit()
 
     return jsonify({"message": "Contact added successfully"}), 201
 
