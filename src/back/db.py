@@ -165,6 +165,34 @@ class Database:
     def remove_shopping_list(self, shopping_id: int) -> None:
         self.cursor.execute("DELETE FROM shopping WHERE id = ?", (shopping_id,))
 
+    def remove_shopping_item(self, user_id: int, ingredient_id: int) -> None:
+        self.cursor.execute(
+            "DELETE FROM shopping WHERE user_id = ? AND ingredient_id = ?",
+            (user_id, ingredient_id),
+        )
+
+    def increment_shopping_item(self, user_id: int, ingredient_id: int) -> None:
+        self.cursor.execute(
+            "UPDATE shopping SET amount = amount + 1 WHERE user_id = ? AND ingredient_id = ?",
+            (user_id, ingredient_id),
+        )
+
+    def get_shopping_item_amount(self, user_id: int, ingredient_id: int) -> int:
+        self.cursor.execute(
+            "SELECT amount FROM shopping WHERE user_id = ? AND ingredient_id = ?",
+            (user_id, ingredient_id),
+        )
+        result = self.cursor.fetchone()
+
+    def decrement_shopping_item(self, user_id: int, ingredient_id: int) -> None:
+        if self.get_shopping_item_amount(user_id, ingredient_id) > 1:
+            self.cursor.execute(
+                "UPDATE shopping SET amount = amount - 1 WHERE user_id = ? AND ingredient_id = ?",
+                (user_id, ingredient_id),
+            )
+        else:
+            self.remove_shopping_item(user_id, ingredient_id)
+
     def user_exists(self, email: str) -> bool:
         self.cursor.execute("SELECT * FROM users WHERE mail = ?", (email,))
         return self.cursor.fetchone() is not None
