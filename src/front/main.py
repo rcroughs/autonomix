@@ -1,7 +1,9 @@
 import gi
 
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, GdkPixbuf
+from gi.repository import Gtk, GdkPixbuf, Gdk
+from telephone import PhoneWindow
+from shopping_list import ShoppingMenu
 
 
 class MyApp(Gtk.Application):
@@ -12,6 +14,23 @@ class MyApp(Gtk.Application):
         self.pixbuf3 = GdkPixbuf.Pixbuf.new_from_file("img/main_menu/courses.png")
         self.pixbuf4 = GdkPixbuf.Pixbuf.new_from_file("img/main_menu/tel.png")
         self.previous_window_size = None  # Track the previous window size
+        css_provider = Gtk.CssProvider()
+        css_provider.load_from_data(b"""
+            .return-button {
+            color: #FFFFFF;
+            border-radius: 5px;
+            padding: 5px;
+            padding-left: 10px;
+            padding-left: 10px;
+            font-size: 60px;
+            }
+        """)
+
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(),
+            css_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION,
+        )
 
     def do_activate(self):
         window = Gtk.ApplicationWindow(application=self)
@@ -63,19 +82,49 @@ class MyApp(Gtk.Application):
         self.button3.connect("clicked", self.show_screen, stack, "screen3")
         self.button4.connect("clicked", self.show_screen, stack, "screen4")
 
+        # Main Menu screen
         stack.add_named(grid, "main_menu")
 
+        return_button = Gtk.Button(label="←")
+        return_button.get_style_context().add_class("return-button")
+        return_button.set_halign(Gtk.Align.START)
+        return_button.connect("clicked", self.show_screen, stack, "main_menu")
+
         # Sub-screens
-        for i in range(5):
-            screen = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-            label = Gtk.Label(label=f"This is screen {i + 1}")
-            return_button = Gtk.Button(label="Return")
-            return_button.connect("clicked", self.show_screen, stack, "main_menu")
-            screen.pack_start(label, False, False, 0)
-            screen.pack_start(return_button, False, False, 0)
-            stack.add_named(screen, f"screen{i + 1}")
+        screen_phone = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        phone = PhoneWindow()
+        return_button = Gtk.Button(label="←")
+        return_button.get_style_context().add_class("return-button")
+        return_button.set_halign(Gtk.Align.START)
+        return_button.connect("clicked", self.show_screen, stack, "main_menu")
+        screen_phone.pack_start(return_button, False, False, 0)
+        screen_phone.pack_start(phone, True, True, 0)
+        # # label = Gtk.Label(label=f"This is screen")
+        # return_button = Gtk.Button(label="Return")
+        # return_button.connect("clicked", self.show_screen, stack, "main_menu")
+        # screen.pack_start(label, False, False, 0)
+        # screen.pack_start(return_button, False, False, 0)
+        stack.add_named(screen_phone, "screen4")  # Ensure screen name is consistent
+
+        shopping_screen = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        shopping = ShoppingMenu()
+        return_button = Gtk.Button(label="←")
+        return_button.get_style_context().add_class("return-button")
+        return_button.set_halign(Gtk.Align.START)
+        return_button.connect("clicked", self.show_screen, stack, "main_menu")
+        shopping.set_hexpand(True)
+        shopping.set_vexpand(True)
+        shopping.set_halign(Gtk.Align.FILL)
+        shopping.set_valign(Gtk.Align.FILL)
+        shopping_screen.pack_start(return_button, False, False, 0)
+        shopping_screen.pack_start(shopping, True, True, 0)
+        stack.add_named(shopping_screen, "screen3")
 
         window.add(stack)
+
+        # Set the default visible child of the stack to be 'main_menu'
+        stack.set_visible_child_name("main_menu")
+
         window.show_all()
 
     def update_images(self, wscale, hscale):
