@@ -103,7 +103,7 @@ class MyApp(Gtk.Application):
         self.previous_window_size = None  # Track the previous window size
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(b"""
-            .return-button {
+            .return-button {\
             color: #FFFFFF;
             border-radius: 5px;
             padding: 5px;
