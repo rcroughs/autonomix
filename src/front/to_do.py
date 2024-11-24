@@ -74,7 +74,6 @@ class AccessibleTodoListWindow(Gtk.Box):
         clear_button.connect("clicked", self.clear_tasks)
         vbox.pack_start(clear_button, False, False, 0)
 
-        
         self.listbox = Gtk.FlowBox()
         self.listbox.get_style_context().add_class("blue-box")
         self.listbox.set_margin_start(0)
@@ -88,7 +87,6 @@ class AccessibleTodoListWindow(Gtk.Box):
 
         # Add shopping list above the button
         list_and_button_box.pack_start(self.listbox, True, True, 0)
-
 
         self.image_paths = [
             ("img/to_do/chien.png", "Image 1"),
@@ -143,7 +141,6 @@ class AccessibleTodoListWindow(Gtk.Box):
 
         pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(img_path, 150, 150, True)
         image = Gtk.Image.new_from_pixbuf(pixbuf)
-        
 
         countdown_label = Gtk.Label(label="")
         countdown_label.get_style_context().add_class("countdown-label")
@@ -163,7 +160,7 @@ class AccessibleTodoListWindow(Gtk.Box):
             while True:
                 now = datetime.datetime.now()
                 remaining = task_datetime - now
-                
+
                 days, seconds = divmod(int(remaining.total_seconds()), 86400)
                 hours, seconds = divmod(seconds, 3600)
                 minutes, _ = divmod(seconds, 60)
@@ -210,12 +207,12 @@ class DateTimePickerDialog(Gtk.Dialog):
         self.calendar = Gtk.Calendar()
         self.time_entry = Gtk.Entry()
         self.time_entry.set_text("12:00")
-        micro_button = Gtk.Button(label="🎤")
-        micro_button.get_style_context().add_class("button-micro")
-        micro_button.set_tooltip_text("Utiliser la date et l'heure actuelles")
-        micro_button.connect("clicked", self.on_micro_clicked)
+        self.micro_button = Gtk.Button(label="🎤")
+        self.micro_button.get_style_context().add_class("button-micro")
+        self.micro_button.set_tooltip_text("Utiliser la date et l'heure actuelles")
+        self.micro_button.connect("clicked", self.on_micro_clicked)
         box = self.get_content_area()
-        box.add(micro_button)
+        box.add(self.micro_button)
         box.add(Gtk.Label(label="Sélectionnez une date:"))
         box.add(self.calendar)
         box.add(Gtk.Label(label="Entrez l'heure (HH:MM):"))
@@ -223,12 +220,48 @@ class DateTimePickerDialog(Gtk.Dialog):
         box.show_all()
 
     def on_micro_clicked(self, widget):
-        res = speech.record()
-        if res is not None:
-            datetime.datetime.fromisoformat(res)
-            self.calendar.select_month(int(res[5:7]) - 1, int(res[:4]))
-            self.calendar.select_day(int(res[8:10]))
-            self.time_entry.set_text(res[11:16])
+        self.spinner = Gtk.Spinner()
+        self.get_content_area().add(self.spinner)
+        self.get_content_area().show_all()
+        self.spinner.start()
+        self.micro_button.set_sensitive(False)
+        threading.Thread(target=self.run_speech_recording, daemon=True).start()
+
+    def run_speech_recording(self):
+        try:
+            res = speech.record()
+            if res is not None:
+                parsed_datetime = datetime.datetime.fromisoformat(res)
+                GLib.idle_add(self.update_ui_with_result, res)
+            else:
+                GLib.idle_add(self.on_recording_error)
+        except Exception as e:
+            GLib.idle_add(self.on_recording_error, str(e))
+
+    def update_ui_with_result(self, res):
+        self.spinner.stop()
+        self.get_content_area().remove(self.spinner)
+        self.micro_button.set_sensitive(True)
+
+        # Update the calendar and time entry
+        self.calendar.select_month(int(res[5:7]) - 1, int(res[:4]))
+        self.calendar.select_day(int(res[8:10]))
+        self.time_entry.set_text(res[11:16])
+
+    def on_recording_error(self, error_message="Erreur lors de l'enregistrement"):
+        self.spinner.stop()
+        self.get_content_area().remove(self.spinner)
+        self.micro_button.set_sensitive(True)
+        error_dialog = Gtk.MessageDialog(
+            transient_for=self,
+            flags=0,
+            message_type=Gtk.MessageType.ERROR,
+            buttons=Gtk.ButtonsType.OK,
+            text="Erreur de reconnaissance vocale",
+        )
+        error_dialog.format_secondary_text(error_message)
+        error_dialog.run()
+        error_dialog.destroy()
 
     def get_datetime(self):
         year, month, day = self.calendar.get_date()
