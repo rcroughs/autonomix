@@ -52,15 +52,7 @@ class ShoppingMenu(Gtk.Box):
         self.add(vbox)
         vbox.pack_start(self.grid, True, True, 0)
 
-        self.shopping_list_box = Gtk.FlowBox()
-        self.shopping_list_box.set_max_children_per_line(8)
-        self.shopping_list_box.set_selection_mode(Gtk.SelectionMode.NONE)
-
-        list_and_button_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        vbox.pack_start(list_and_button_box, False, False, 0)
-
-        # Add shopping list above the button
-        list_and_button_box.pack_start(self.shopping_list_box, True, True, 0)
+        
 
         # Erase Everything button
         erase_button = Gtk.Button()
@@ -73,10 +65,24 @@ class ShoppingMenu(Gtk.Box):
         )
         erase_image = Gtk.Image.new_from_pixbuf(pixbuf)
         erase_button.set_image(erase_image)
+        erase_button.set_margin_start(0)
+        erase_button.set_margin_end(0)
+        erase_button.set_margin_top(0)
+        erase_button.set_margin_bottom(0)
         erase_button.connect("clicked", self.erase_everything)
 
         # Add erase button at the bottom
-        list_and_button_box.pack_start(erase_button, False, False, 0)
+        vbox.pack_start(erase_button, False, False, 0)
+
+        self.shopping_list_box = Gtk.FlowBox()
+        self.shopping_list_box.set_max_children_per_line(8)
+        self.shopping_list_box.set_selection_mode(Gtk.SelectionMode.NONE)
+
+        list_and_button_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        vbox.pack_start(list_and_button_box, False, False, 0)
+
+        # Add shopping list above the button
+        list_and_button_box.pack_start(self.shopping_list_box, True, True, 0)
 
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(b"""

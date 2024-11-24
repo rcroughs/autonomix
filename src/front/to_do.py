@@ -36,6 +36,9 @@ class AccessibleTodoListWindow(Gtk.Box):
                     min-width: 1000px;
                     min-height: 1000px;
                 }
+                .button-micro{
+                    font-size: 40px;
+                }
                 """)
         screen = Gdk.Screen.get_default()
         style_context = Gtk.StyleContext()
@@ -71,19 +74,21 @@ class AccessibleTodoListWindow(Gtk.Box):
         clear_button.connect("clicked", self.clear_tasks)
         vbox.pack_start(clear_button, False, False, 0)
 
-        scrolled_window_tasks = Gtk.ScrolledWindow()
-        scrolled_window_tasks.set_policy(
-            Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC
-        )
-        scrolled_window_tasks.set_size_request(-1, 300)
-        self.listbox = Gtk.ListBox()
+        
+        self.listbox = Gtk.FlowBox()
         self.listbox.get_style_context().add_class("blue-box")
         self.listbox.set_margin_start(0)
         self.listbox.set_margin_end(0)
         self.listbox.set_margin_top(0)
         self.listbox.set_margin_bottom(0)
-        scrolled_window_tasks.add(self.listbox)
-        vbox.pack_start(scrolled_window_tasks, True, True, 0)
+        self.listbox.set_max_children_per_line(1)
+        self.listbox.set_selection_mode(Gtk.SelectionMode.NONE)
+        list_and_button_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        vbox.pack_start(list_and_button_box, False, False, 0)
+
+        # Add shopping list above the button
+        list_and_button_box.pack_start(self.listbox, True, True, 0)
+
 
         self.image_paths = [
             ("img/to_do/chien.png", "Image 1"),
@@ -107,7 +112,7 @@ class AccessibleTodoListWindow(Gtk.Box):
         image = Gtk.Image.new_from_pixbuf(pixbuf)
         button.set_image(image)
         button.set_tooltip_text(description)
-        button.set_margin_start(10)
+        button.set_margin_start(133)
         button.set_margin_top(10)
         button.connect("clicked", self.on_image_clicked, img_path)
         self.button_box.pack_start(button, False, False, 0)
@@ -138,8 +143,11 @@ class AccessibleTodoListWindow(Gtk.Box):
 
         pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(img_path, 150, 150, True)
         image = Gtk.Image.new_from_pixbuf(pixbuf)
+        
 
         countdown_label = Gtk.Label(label="")
+        countdown_label.get_style_context().add_class("countdown-label")
+
         self.update_countdown(countdown_label, task_datetime)
 
         hbox.pack_start(circle_button, False, False, 0)
@@ -155,18 +163,7 @@ class AccessibleTodoListWindow(Gtk.Box):
             while True:
                 now = datetime.datetime.now()
                 remaining = task_datetime - now
-                if remaining.total_seconds() <= 0:
-                    today_str = "  ⏳"
-                    GLib.idle_add(label.set_markup, today_str)
-
-                    # Appliquer la classe CSS au label
-                    GLib.idle_add(
-                        lambda: label.get_style_context().add_class(
-                            "countdown-label-grand"
-                        )
-                    )
-
-                    break
+                
                 days, seconds = divmod(int(remaining.total_seconds()), 86400)
                 hours, seconds = divmod(seconds, 3600)
                 minutes, _ = divmod(seconds, 60)
@@ -214,6 +211,7 @@ class DateTimePickerDialog(Gtk.Dialog):
         self.time_entry = Gtk.Entry()
         self.time_entry.set_text("12:00")
         micro_button = Gtk.Button(label="🎤")
+        micro_button.get_style_context().add_class("button-micro")
         micro_button.set_tooltip_text("Utiliser la date et l'heure actuelles")
         micro_button.connect("clicked", self.on_micro_clicked)
         box = self.get_content_area()
