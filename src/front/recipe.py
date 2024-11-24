@@ -26,6 +26,10 @@ class RecipeWindow(Gtk.Box):
                 background-color: #FF9999; 
                 border-radius: 10px;
             }
+            .etapes{
+                font-size: 70px;
+                color: #000000;
+            }
             """)
         Gtk.StyleContext.add_provider_for_screen(
             Gdk.Screen.get_default(),
@@ -68,6 +72,8 @@ class RecipeWindow(Gtk.Box):
         # Afficher l'écran principal par défaut
         self.stack.set_visible_child_name("main_screen")
 
+
+
     def add_screen_with_back_button(self, screen_name, label_text):
         """
         Crée un écran avec un bouton retour vers l'écran principal.
@@ -84,6 +90,98 @@ class RecipeWindow(Gtk.Box):
         label = Gtk.Label(label=label_text)
         screen.pack_start(label, True, True, 0)
 
+        ingredients_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        screen.add(ingredients_box)
+        ingredients_box.set_halign(Gtk.Align.CENTER)  # Center-align the box
+        ingredients_box.set_margin_top(20)  # Add some top margin
+        
+
+        if screen_name == "screen_3":
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale("img/shopping_icons/ai-generated-potato-food-free-png.png", width=100, height=100, preserve_aspect_ratio=True)
+            image = Gtk.Image.new_from_pixbuf(pixbuf)
+            ingredients_box.pack_start(image, False, False, 0)
+            pixbuf2 = GdkPixbuf.Pixbuf.new_from_file_at_scale("img/shopping_icons/ai-generated-potato-food-free-png.png", width=100, height=100, preserve_aspect_ratio=True)
+            image2 = Gtk.Image.new_from_pixbuf(pixbuf2)
+            ingredients_box.pack_start(image2, False, False, 0)
+            pixbuf3 = GdkPixbuf.Pixbuf.new_from_file_at_scale("img/shopping_icons/28021-1024x1024-removebg-preview.png", width=150, height=150, preserve_aspect_ratio=True)
+            image3 = Gtk.Image.new_from_pixbuf(pixbuf3)
+            ingredients_box.pack_start(image3, False, False, 0)
+            pixbuf4 = GdkPixbuf.Pixbuf.new_from_file_at_scale("img/shopping_icons/pngimg.com - salt_PNG22363.png", width=150, height=150, preserve_aspect_ratio=True)
+            image4 = Gtk.Image.new_from_pixbuf(pixbuf4)
+            ingredients_box.pack_start(image4, False, False, 0)
+
+        etapes_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        screen.add(etapes_box)
+        etapes_box.set_halign(Gtk.Align.CENTER)  # Center-align the box
+        etapes_box.set_margin_top(20)  # Add some top margin
+
+        if screen_name == "screen_3":
+            lab1 = Gtk.Label(label="1")
+            lab1.get_style_context().add_class("etapes")
+            pixbuf5 = GdkPixbuf.Pixbuf.new_from_file_at_scale("img/recipes_icons/550px-nowatermark-Clean-Potatoes-Step-2-Version-5.jpg", width=200, height=200, preserve_aspect_ratio=True)
+            image5 = Gtk.Image.new_from_pixbuf(pixbuf5)
+            image5.set_margin_end(50)
+            image5.set_margin_top(50)
+            etapes_box.pack_start(lab1, False, False, 0)
+            etapes_box.pack_start(image5, False, False, 0)
+            lab2 = Gtk.Label(label="2")
+            lab2.get_style_context().add_class("etapes")
+            pixbuf6 = GdkPixbuf.Pixbuf.new_from_file_at_scale("img/recipes_icons/doit-eplucher-les-pommes-terre-avant-les-faire-cuire-une-dieteticienne-tranche.jpeg", width=200, height=200, preserve_aspect_ratio=True)
+            image6 = Gtk.Image.new_from_pixbuf(pixbuf6)
+            image6.set_margin_end(50)
+            image6.set_margin_top(50)
+            etapes_box.pack_start(lab2, False, False, 0)
+            etapes_box.pack_start(image6, False, False, 0)
+            lab3 = Gtk.Label(label="3")
+            lab3.get_style_context().add_class("etapes")
+            pixbuf7 = GdkPixbuf.Pixbuf.new_from_file_at_scale("img/recipes_icons/medium_Capture_decran_2020_03_17_a_16_23_26_o_G_Pk_Nr1_3fcf265d07.jpeg", width=200, height=200, preserve_aspect_ratio=True)
+            image7 = Gtk.Image.new_from_pixbuf(pixbuf7)
+            image7.set_margin_end(50)
+            image7.set_margin_top(50)
+            etapes_box.pack_start(lab3, False, False, 0)
+            etapes_box.pack_start(image7, False, False, 0)
+        
+        etapes_box2 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+        screen.add(etapes_box2)
+        etapes_box2.set_halign(Gtk.Align.CENTER)  # Center-align the box
+        etapes_box2.set_margin_top(20)  # Add some top margin
+
+        if screen_name == "screen_3":
+            lab4 = Gtk.Label(label="4")
+            lab4.get_style_context().add_class("etapes")
+            pixbuf8 = GdkPixbuf.Pixbuf.new_from_file_at_scale("img/recipes_icons/image.png", width=200, height=200, preserve_aspect_ratio=True)
+            image8 = Gtk.Image.new_from_pixbuf(pixbuf8)
+            image8.set_margin_end(50)
+            image8.set_margin_top(50)
+            etapes_box2.pack_start(lab4, False, False, 0)
+            etapes_box2.pack_start(image8, False, False, 0)
+            lab5 = Gtk.Label(label="5")
+            lab5.get_style_context().add_class("etapes")
+            pixbuf9 = GdkPixbuf.Pixbuf.new_from_file_at_scale("img/recipes_icons/image(2).png", width=200, height=200, preserve_aspect_ratio=True)
+            image9 = Gtk.Image.new_from_pixbuf(pixbuf9)
+            image9.set_margin_end(50)
+            image9.set_margin_top(50)
+            etapes_box2.pack_start(lab5, False, False, 0)
+            etapes_box2.pack_start(image9, False, False, 0)
+            lab6 = Gtk.Label(label="6")
+            lab6.get_style_context().add_class("etapes")
+            pixbuf10 = GdkPixbuf.Pixbuf.new_from_file_at_scale("img/recipes_icons/image(5).png", width=200, height=200, preserve_aspect_ratio=True)
+            image10 = Gtk.Image.new_from_pixbuf(pixbuf10)
+            image10.set_margin_end(50)
+            image10.set_margin_top(50)
+            etapes_box2.pack_start(lab6, False, False, 0)
+            etapes_box2.pack_start(image10, False, False, 0)
+        
+
+        screen.pack_start(ingredients_box, False, False, 0)
+        screen.pack_start(etapes_box, False, False, 0)
+        screen.pack_start(etapes_box2, False, False, 0)
+
+
+            
+
+
+        screen.show_all()
         # Ajouter l'écran au Stack
         self.stack.add_named(screen, screen_name)
 
@@ -93,6 +191,9 @@ class RecipeWindow(Gtk.Box):
         """
         # Récupérer l'écran depuis le Gtk.Stack
         screen = self.stack.get_child_by_name(screen_name)
+        
+            
+            
 
 
     def add_image_to_top_box(self, button, top_box):
