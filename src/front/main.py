@@ -8,6 +8,7 @@ from gi.repository import Gtk, GdkPixbuf, Gdk
 from telephone import PhoneWindow
 from shopping_list import ShoppingMenu
 from to_do import AccessibleTodoListWindow
+from recipe import RecipeWindow
 import requests
 import os.path
 import api
@@ -155,6 +156,16 @@ class MyApp(Gtk.Application):
         return_button.connect("clicked", self.show_screen, stack, "main_menu")
 
         # Sub-screens
+        screen_recipe = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        recipe = RecipeWindow(token)
+        return_button = Gtk.Button(label="←")
+        return_button.get_style_context().add_class("return-button")
+        return_button.set_halign(Gtk.Align.START)
+        return_button.connect("clicked", self.show_screen, stack, "main_menu")
+        screen_recipe.pack_start(return_button, False, False, 0)
+        screen_recipe.pack_start(recipe, True, True, 0)
+        stack.add_named(screen_recipe, "screen1")
+
         screen_phone = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         phone = PhoneWindow(token)
         return_button = Gtk.Button(label="←")
