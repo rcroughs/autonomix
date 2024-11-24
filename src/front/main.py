@@ -42,6 +42,11 @@ class LoginWindow(Gtk.Window):
         self.login_button.connect("clicked", self.on_login_clicked)
         layout.pack_start(self.login_button, False, False, 0)
 
+        # Register Button
+        self.register_button = Gtk.Button(label="Register")
+        self.register_button.connect("clicked", self.on_register_clicked)
+        layout.pack_start(self.register_button, False, False, 0)
+
         # Feedback label
         self.feedback_label = Gtk.Label()
         layout.pack_start(self.feedback_label, False, False, 0)
@@ -64,6 +69,68 @@ class LoginWindow(Gtk.Window):
         else:
             self.feedback_label.set_text("Invalid credentials. Try again.")
 
+    def on_register_clicked(self, button):
+        register_window = RegisterWindow(self)
+        register_window.show_all()
+
+
+class RegisterWindow(Gtk.Window):
+    def __init__(self, login_window):
+        super().__init__(title="Register")
+        self.login_window = login_window
+        self.set_border_width(10)
+        self.set_default_size(300, 300)
+
+        # Layout
+        layout = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        layout.set_margin_top(20)
+        layout.set_margin_bottom(20)
+        layout.set_margin_start(20)
+        layout.set_margin_end(20)
+        self.add(layout)
+
+        # Name Entry
+        self.name_entry = Gtk.Entry()
+        self.name_entry.set_placeholder_text("Name")
+        layout.pack_start(self.name_entry, False, False, 0)
+
+        # Email Entry
+        self.email_entry = Gtk.Entry()
+        self.email_entry.set_placeholder_text("Email")
+        layout.pack_start(self.email_entry, False, False, 0)
+
+        # Password Entry
+        self.password_entry = Gtk.Entry()
+        self.password_entry.set_placeholder_text("Password")
+        self.password_entry.set_visibility(False)
+        layout.pack_start(self.password_entry, False, False, 0)
+
+        # Register Button
+        self.register_button = Gtk.Button(label="Create Account")
+        self.register_button.connect("clicked", self.on_register_clicked)
+        layout.pack_start(self.register_button, False, False, 0)
+
+        # Feedback Label
+        self.feedback_label = Gtk.Label()
+        layout.pack_start(self.feedback_label, False, False, 0)
+
+    def on_register_clicked(self, button):
+        name = self.name_entry.get_text()
+        email = self.email_entry.get_text()
+        password = self.password_entry.get_text()
+
+        # Basic validation
+        if not name or not email or not password:
+            self.feedback_label.set_text("All fields are required.")
+        else:
+            # Save account in the simulated database
+            api.register(name, email, password)
+            self.feedback_label.set_text("Account created successfully!")
+            self.close()  # Close the register window
+            self.login_window.feedback_label.set_text(
+                "Account created. You can now log in."
+            )
+
 
 class MyApp(Gtk.Application):
     def __init__(self):
@@ -71,7 +138,7 @@ class MyApp(Gtk.Application):
         self.pixbuf1 = GdkPixbuf.Pixbuf.new_from_file("img/main_menu/food.png")
         self.pixbuf2 = GdkPixbuf.Pixbuf.new_from_file("img/main_menu/todo.png")
         self.pixbuf3 = GdkPixbuf.Pixbuf.new_from_file("img/main_menu/courses.png")
-        self.pixbuf4 = GdkPixbuf.Pixbuf.new_from_file("img/main_menu/tel.png")
+        self.pixbuf4 = GdkPixbuf.Pixbuf.new_from_file("img/main_menu/phone.png")
         self.previous_window_size = None  # Track the previous window size
         self.token = token
         css_provider = Gtk.CssProvider()
@@ -190,7 +257,6 @@ class MyApp(Gtk.Application):
         screen_todo.pack_start(return_button, False, False, 0)
         screen_todo.pack_start(todo, True, True, 0)
         stack.add_named(screen_todo, "screen2")
-        
 
         shopping_screen = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         shopping = ShoppingMenu()
@@ -215,16 +281,16 @@ class MyApp(Gtk.Application):
 
     def update_images(self, wscale, hscale):
         self.pixbuf1 = self.pixbuf1.scale_simple(
-            wscale, hscale, GdkPixbuf.InterpType.BILINEAR
+            hscale*1.18, hscale, GdkPixbuf.InterpType.BILINEAR
         )
         self.pixbuf2 = self.pixbuf2.scale_simple(
-            wscale, hscale, GdkPixbuf.InterpType.BILINEAR
+            hscale, hscale, GdkPixbuf.InterpType.BILINEAR
         )
         self.pixbuf3 = self.pixbuf3.scale_simple(
-            wscale, hscale, GdkPixbuf.InterpType.BILINEAR
+            hscale * 1.13, hscale, GdkPixbuf.InterpType.BILINEAR
         )
         self.pixbuf4 = self.pixbuf4.scale_simple(
-            wscale, hscale, GdkPixbuf.InterpType.BILINEAR
+            hscale*1.23, hscale, GdkPixbuf.InterpType.BILINEAR
         )
 
     def do_resize(self, window):
@@ -248,7 +314,6 @@ def main():
         with open(api.token_file, "r") as f:
             token = f.read()
             if token is not None:
-                api.get_contacts(token)
                 app = MyApp()
                 app.run()
                 return

@@ -23,10 +23,10 @@ class PhoneWindow(Gtk.Box):
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(b"""
             .window-phone {
-                background-color: #58855C;
+                background-color: #84a98c;
             }
             .button-contact {
-                background-color: #2BF52E;
+                background-color: #386641;
                 border-radius: 10px;
             }
         """)
@@ -72,6 +72,10 @@ class PhoneWindow(Gtk.Box):
         for index, contact in enumerate(self.contacts):
             button = Gtk.Button()
             button.get_style_context().add_class("button-contact")
+            button.set_margin_start(0)
+            button.set_margin_end(10)
+            button.set_margin_top(10)
+            button.set_margin_bottom(10)
 
             pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
                 contact["image_url"], width=300, height=300, preserve_aspect_ratio=True

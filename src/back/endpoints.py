@@ -134,10 +134,16 @@ def get_recipes():
 
     # Formatage
     recipes_list = [
-        {"id": recipe.id, "name": recipe.name, "json":json.loads(recipe.json), "difficulty": recipe.difficulty, "image_url": recipe.image_url}
+        {
+            "id": recipe.id,
+            "name": recipe.name,
+            "json": json.loads(recipe.json),
+            "difficulty": recipe.difficulty,
+            "image_url": recipe.image_url,
+        }
         for recipe in recipes
     ]
-    
+
     return jsonify(recipes_list), 200
 
 
@@ -156,22 +162,22 @@ def post_recipe():
         name=data["name"],
         difficulty=data["difficulty"],
         json=json.dumps(data["json"]),
-        image_url=data["image_url"]
+        image_url=data["image_url"],
     )
     db.add_recipe(new_recipe)
 
     recipe_id = db.get_last_inserted_recipe().id
 
-    for i in range(1, len(data["json"])+1):
+    for i in range(1, len(data["json"]) + 1):
         times, ingredient = -1, -1
         if "-" in data["json"][f"{i}"]:
-            times, ingredient = data["json"][f"{i}"].split('-')
+            times, ingredient = data["json"][f"{i}"].split("-")
         if times != -1 and ingredient != -1:
             resp = db.get_ingredient_by_name(ingredient)
             if resp:
                 new_link = RecipeIngredient(recipe_id, resp.get_id(), times)
                 db.add_recipe_ingredient(new_link)
-    
+
     db.commit()
     return jsonify({"message": "Recipe added successfully"}), 201
 
@@ -256,6 +262,51 @@ def add_shopping_item():
     db.commit()
 
     return jsonify({"message": "Shopping item added successfully"}), 201
+
+
+@app.route("/shopping", methods=["DELETE"])
+def delete_shopping_item():
+    data = request.json
+    user_id = get_user_id(request.headers.get("Authorization"))
+    if user_id is None:
+        return jsonify({"error": "Unauthorized"}), 401
+    # Vérification des champs nécessaires
+    if not data:
+        return jsonify({"error": "Invalid Data"}), 400
+    # Suppression d'un élément d'achat
+    db.delete_shopping_item(user_id, data["category_id"])
+    db.commit()
+    return jsonify({"message": "Shopping item deleted successfully"}), 200
+
+
+@app.route("/shopping/increment", methods=["POST"])
+def increment_shopping_item():
+    data = request.json
+    user_id = get_user_id(request.headers.get("Authorization"))
+    if user_id is None:
+        return jsonify({"error": "Unauthorized"}), 401
+    # Vérification des champs nécessaires
+    if not data:
+        return jsonify({"error": "Invalid Data"}), 400
+    # Incrémentation d'un élément d'achat
+    db.increment_shopping_item(user_id, data["category_id"])
+    db.commit()
+    return jsonify({"message": "Shopping item incremented successfully"}), 200
+
+
+@app.route("/shopping/decrement", methods=["POST"])
+def decrement_shopping_item():
+    data = request.json
+    user_id = get_user_id(request.headers.get("Authorization"))
+    if user_id is None:
+        return jsonify({"error": "Unauthorized"}), 401
+    # Vérification des champs nécessaires
+    if not data:
+        return jsonify({"error": "Invalid Data"}), 400
+    # Incrémentation d'un élément d'achat
+    db.decrement_shopping_item(user_id, data["category_id"])
+    db.commit()
+    return jsonify({"message": "Shopping item decremented successfully"})
 
 
 # -------------Contacts-------------

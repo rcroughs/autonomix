@@ -16,30 +16,29 @@ class ShoppingMenu(Gtk.Box):
 
         # LISTE DE COURSES
         self.items = [
-            "img/shopping_icons/184532.png",
-            "img/shopping_icons/395211.png",
-            "img/shopping_icons/766020.png",
-            "img/shopping_icons/837560.png",
-            "img/shopping_icons/883514.png",
-            "img/shopping_icons/1206237.png",
-            "img/shopping_icons/2079330.png",
-            "img/shopping_icons/2909779.png",
-            "img/shopping_icons/2909894.png",
-            "img/shopping_icons/3093581.png",
-            "img/shopping_icons/4853298.png",
-            "img/shopping_icons/7401602.png",
-            "img/shopping_icons/banane.png",
-            "img/shopping_icons/bouteille-de-lait.png",
-            "img/shopping_icons/cafe.png",
-            "img/shopping_icons/farine.png",
-            "img/shopping_icons/leau.png",
-            "img/shopping_icons/lemon_6866595.png",
-            "img/shopping_icons/orange.png",
-            "img/shopping_icons/pain.png",
-            "img/shopping_icons/peach_680930.png",
-            "img/shopping_icons/pomme.png",
-            "img/shopping_icons/potato_1652127.png",
-            "img/shopping_icons/sucre.png",
+            "img/shopping_icons/6aaaa4aa91a44d6ea88d1c9cb2626827.png",
+            "img/shopping_icons/png-clipart-unopened-milk-carton-illustration-milk-paper-tetra-pak-carton-milk-milk-box-model-blue-white-thumbnail-removebg-preview.png",
+            "img/shopping_icons/435979677b2eae91687cc7685bcabcbe.png",
+            "img/shopping_icons/ai-generated-breakfast-cereal-isolated-on-transparent-background-free-png.png",
+            "img/shopping_icons/lemon-png-image-0.png",
+            "img/shopping_icons/png-clipart-red-bell-pepper-bell-pepper-chili-pepper-red-pepper-natural-foods-food-thumbnail-removebg-preview.png",
+            "img/shopping_icons/png-clipart-sack-of-wheat-flour-atta-flour-dal-wheat-flour-roti-flour-and-wheat-food-whole-grain-removebg-preview.png",
+            "img/shopping_icons/pngimg.com - banana_PNG842.png",
+            "img/shopping_icons/pngimg.com - butter_PNG17.png",
+            "img/shopping_icons/pngimg.com - coffee_beans_PNG9284.png",
+            "img/shopping_icons/34-egg-png-image-thumb.png",
+            "img/shopping_icons/pngimg.com - tomato_PNG12528.png",
+            "img/shopping_icons/pngtree-a-piece-of-meat-that-is-cut-in-half-png-image_11955762.png",
+            "img/shopping_icons/pngtree-bakery-bread-milky-plain-white-bread-png-image_11503244.png",
+            "img/shopping_icons/pngtree-fresh-apple-fruit-red-png-image_10203073.png",
+            "img/shopping_icons/pngtree-fresh-orange-png-png-image_10159570.png",
+            "img/shopping_icons/pngtree-salami-dry-bonded-isolated-picture-image_13042049.png",
+            "img/shopping_icons/pngtree-strawberry-ice-cream-cone-png-image_11925089.png",
+            "img/shopping_icons/pngtree-sugar-white-sugar-picture-image_13276467.png",
+            "img/shopping_icons/pngtree-the-peach-fruit-png-png-image_11500775.png",
+            "img/shopping_icons/purepng.com-cheesefood-organic-cheese-piece-block-dairy-9415246353872kvm0.png",
+            "img/shopping_icons/rice-removebg-preview.png",
+            "img/shopping_icons/whole-grains-beans-isolated-healthy-diet-raw-ingredients-free-png.png"
         ]
 
         self.shopping_list = {}
@@ -53,15 +52,7 @@ class ShoppingMenu(Gtk.Box):
         self.add(vbox)
         vbox.pack_start(self.grid, True, True, 0)
 
-        self.shopping_list_box = Gtk.FlowBox()
-        self.shopping_list_box.set_max_children_per_line(8)
-        self.shopping_list_box.set_selection_mode(Gtk.SelectionMode.NONE)
-
-        list_and_button_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
-        vbox.pack_start(list_and_button_box, False, False, 0)
-
-        # Add shopping list above the button
-        list_and_button_box.pack_start(self.shopping_list_box, True, True, 0)
+        
 
         # Erase Everything button
         erase_button = Gtk.Button()
@@ -74,15 +65,29 @@ class ShoppingMenu(Gtk.Box):
         )
         erase_image = Gtk.Image.new_from_pixbuf(pixbuf)
         erase_button.set_image(erase_image)
+        erase_button.set_margin_start(0)
+        erase_button.set_margin_end(0)
+        erase_button.set_margin_top(0)
+        erase_button.set_margin_bottom(0)
         erase_button.connect("clicked", self.erase_everything)
 
         # Add erase button at the bottom
-        list_and_button_box.pack_start(erase_button, False, False, 0)
+        vbox.pack_start(erase_button, False, False, 0)
+
+        self.shopping_list_box = Gtk.FlowBox()
+        self.shopping_list_box.set_max_children_per_line(8)
+        self.shopping_list_box.set_selection_mode(Gtk.SelectionMode.NONE)
+
+        list_and_button_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=10)
+        vbox.pack_start(list_and_button_box, False, False, 0)
+
+        # Add shopping list above the button
+        list_and_button_box.pack_start(self.shopping_list_box, True, True, 0)
 
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(b"""
             .window-shop {
-                background-color: #B36BF9;
+                background-color: #716D54;
             }
             .button-shop {
                 background-color: transparent;
@@ -118,32 +123,37 @@ class ShoppingMenu(Gtk.Box):
             row = index // columns
             col = index % columns
 
-            item_container = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5)
-            item_container.set_margin_top(10)  # Add top margin
-            item_container.set_margin_start(30)  # Add left margin
+            item_container1 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=5)
+            item_container1.set_margin_top(10)  # Add top margin
+            item_container1.set_margin_start(30)  # Add left margin
+            
 
             # Load the image
             pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
-                image_path, width=100, height=100, preserve_aspect_ratio=True
+                image_path, width=100, height=100, preserve_aspect_ratio=False
             )
             image = Gtk.Image.new_from_pixbuf(pixbuf)
+
+            image.set_halign(Gtk.Align.CENTER)  # Horizontal alignment: Center
+            image.set_valign(Gtk.Align.CENTER)
 
             plus_button = Gtk.Button(label="+")
             minus_button = Gtk.Button(label="-")
             plus_button.get_style_context().add_class("quantity-buttons")
             minus_button.get_style_context().add_class("quantity-buttons")
-
+            
+            
             # Connect signals
             plus_button.connect("clicked", self.add_to_shopping_list, image_path)
             minus_button.connect("clicked", self.remove_from_shopping_list, image_path)
 
             # Add the image and buttons to the vertical box
-            item_container.pack_start(image, False, False, 0)
-            item_container.pack_start(plus_button, False, False, 0)
-            item_container.pack_start(minus_button, False, False, 0)
+            item_container1.pack_start(image, False, False, 0)
+            item_container1.pack_start(plus_button, False, False, 0)
+            item_container1.pack_start(minus_button, False, False, 0)
 
             # Add the item container to the grid
-            self.grid.attach(item_container, col, row, 1, 1)
+            self.grid.attach(item_container1, col, row, 1, 1)
 
     def add_to_shopping_list(self, button, path):
         if path not in self.shopping_list:
@@ -165,6 +175,7 @@ class ShoppingMenu(Gtk.Box):
         for image_path, quantity in self.shopping_list.items():
             # Horizontal box for the item and quantity
             item_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
+            item_box.set_margin_top(30)
 
             # Load the image
             pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
